@@ -13,4 +13,5 @@
 
     <string name="activity_login_title">Login</string>
     <string name="activity_transport_title">Transporte Ativo</string>
+
 </resources>

@@ -1,8 +1,13 @@
 package br.com.idbservice.apptranspcheck.Presentation;
 
+import android.Manifest;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
+import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.app.LoaderManager.LoaderCallbacks;
 
@@ -29,16 +34,15 @@ import android.widget.TextView;
 import java.util.ArrayList;
 import java.util.List;
 
+import br.com.idbservice.apptranspcheck.Entities.UsuarioEntity;
+import br.com.idbservice.apptranspcheck.Infrastructure.Data.InitData;
+import br.com.idbservice.apptranspcheck.Infrastructure.Data.JsonData;
 import br.com.idbservice.apptranspcheck.R;
 
 
-public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<Cursor> {
+public class LoginActivity extends AppCompatActivity  {
 
     private static final int REQUEST_READ_CONTACTS = 0;
-
-    private static final String[] DUMMY_CREDENTIALS = new String[]{
-            "moto1@gmail.com:1234", "moto2@gmail.com:world"
-    };
 
     private UserLoginTask mAuthTask = null;
 
@@ -50,8 +54,11 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_login);
 
+        // Carga inicial caso nao exista
+        InitData.CargaInicial();
+
+        setContentView(R.layout.activity_login);
 
         mEmailView = (AutoCompleteTextView) findViewById(R.id.email);
 
@@ -120,7 +127,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
     private boolean isEmailValid(String email) {
 
-        return email.contains("@");
+        return true; //email.contains("@");
     }
 
     private boolean isPasswordValid(String password) {
@@ -128,9 +135,6 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         return password.length() >= 4;
     }
 
-    /**
-     * Shows the progress UI and hides the login form.
-     */
     @TargetApi(Build.VERSION_CODES.HONEYCOMB_MR2)
     private void showProgress(final boolean show) {
 
@@ -160,38 +164,6 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         }
     }
 
-    @Override
-    public Loader<Cursor> onCreateLoader(int i, Bundle bundle) {
-        return new CursorLoader(this,
-
-                Uri.withAppendedPath(ContactsContract.Profile.CONTENT_URI,
-                        ContactsContract.Contacts.Data.CONTENT_DIRECTORY), ProfileQuery.PROJECTION,
-
-
-                ContactsContract.Contacts.Data.MIMETYPE +
-                        " = ?", new String[]{ContactsContract.CommonDataKinds.Email
-                .CONTENT_ITEM_TYPE},
-
-
-                ContactsContract.Contacts.Data.IS_PRIMARY + " DESC");
-    }
-
-    @Override
-    public void onLoadFinished(Loader<Cursor> cursorLoader, Cursor cursor) {
-        List<String> emails = new ArrayList<>();
-        cursor.moveToFirst();
-        while (!cursor.isAfterLast()) {
-            emails.add(cursor.getString(ProfileQuery.ADDRESS));
-            cursor.moveToNext();
-        }
-
-        addEmailsToAutoComplete(emails);
-    }
-
-    @Override
-    public void onLoaderReset(Loader<Cursor> cursorLoader) {
-
-    }
 
     private void addEmailsToAutoComplete(List<String> emailAddressCollection) {
         ArrayAdapter<String> adapter =
@@ -202,20 +174,6 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     }
 
 
-    private interface ProfileQuery {
-        String[] PROJECTION = {
-                ContactsContract.CommonDataKinds.Email.ADDRESS,
-                ContactsContract.CommonDataKinds.Email.IS_PRIMARY,
-        };
-
-        int ADDRESS = 0;
-        int IS_PRIMARY = 1;
-    }
-
-    /**
-     * Represents an asynchronous login/registration task used to authenticate
-     * the user.
-     */
     public class UserLoginTask extends AsyncTask<Void, Void, Boolean> {
 
         private final String mEmail;
@@ -228,24 +186,24 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
         @Override
         protected Boolean doInBackground(Void... params) {
-            // TODO: attempt authentication against a network service.
 
             try {
                 // Simulate network access.
                 Thread.sleep(2000);
+
+                List<UsuarioEntity> usuarios = (List<UsuarioEntity>)JsonData.LerJson(UsuarioEntity.TABLE_NAME);
+                for (UsuarioEntity usuario : usuarios) {
+                    if (usuario.getUsuario().equals(mEmail)) {
+                        return usuario.getSenha().equals(mPassword);
+                    }
+                }
+
             } catch (InterruptedException e) {
                 return false;
+            } catch (Exception e) {
+                e.printStackTrace();
             }
 
-            for (String credential : DUMMY_CREDENTIALS) {
-                String[] pieces = credential.split(":");
-                if (pieces[0].equals(mEmail)) {
-                    // Account exists, return true if the password matches.
-                    return pieces[1].equals(mPassword);
-                }
-            }
-
-            // TODO: register the new account here.
             return true;
         }
 
@@ -255,7 +213,10 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             showProgress(false);
 
             if (success) {
-                finish();
+                //startActivity(new Intent("br.com.idbservice.apptranspcheck.Presentation.TransporteActivity"));
+
+                Intent i = new Intent(getApplicationContext(), TransporteActivity.class);
+                startActivity(i);
             } else {
                 mPasswordView.setError(getString(R.string.error_incorrect_password));
                 mPasswordView.requestFocus();
