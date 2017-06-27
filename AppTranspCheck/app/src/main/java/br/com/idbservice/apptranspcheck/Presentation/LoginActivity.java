@@ -1,38 +1,27 @@
 package br.com.idbservice.apptranspcheck.Presentation;
 
-import android.Manifest;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
 import android.content.Intent;
-import android.content.pm.PackageManager;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
-import android.app.LoaderManager.LoaderCallbacks;
 
-import android.content.CursorLoader;
-import android.content.Loader;
-import android.database.Cursor;
-import android.net.Uri;
 import android.os.AsyncTask;
 
 import android.os.Build;
 import android.os.Bundle;
-import android.provider.ContactsContract;
 import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.inputmethod.EditorInfo;
-import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 import br.com.idbservice.apptranspcheck.Entities.UsuarioEntity;
 import br.com.idbservice.apptranspcheck.Infrastructure.Data.InitData;
@@ -42,14 +31,12 @@ import br.com.idbservice.apptranspcheck.R;
 
 public class LoginActivity extends AppCompatActivity  {
 
-    private static final int REQUEST_READ_CONTACTS = 0;
+    private UserLoginTask userLoginTask = null;
 
-    private UserLoginTask mAuthTask = null;
-
-    private AutoCompleteTextView mEmailView;
-    private EditText mPasswordView;
-    private View mProgressView;
-    private View mLoginFormView;
+    private AutoCompleteTextView textUsuarioView;
+    private EditText textSenhaView;
+    private View loginProgress;
+    private View loginScroll;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,10 +47,10 @@ public class LoginActivity extends AppCompatActivity  {
 
         setContentView(R.layout.activity_login);
 
-        mEmailView = (AutoCompleteTextView) findViewById(R.id.email);
+        textUsuarioView = (AutoCompleteTextView) findViewById(R.id.textUsuario);
 
-        mPasswordView = (EditText) findViewById(R.id.password);
-        mPasswordView.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+        textSenhaView = (EditText) findViewById(R.id.textSenha);
+        textSenhaView.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView textView, int id, KeyEvent keyEvent) {
                 if (id == R.id.login || id == EditorInfo.IME_NULL) {
@@ -74,45 +61,45 @@ public class LoginActivity extends AppCompatActivity  {
             }
         });
 
-        Button mEmailSignInButton = (Button) findViewById(R.id.email_sign_in_button);
-        mEmailSignInButton.setOnClickListener(new OnClickListener() {
+        Button btnEntrar = (Button) findViewById(R.id.btnEntrar);
+        btnEntrar.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
                 attemptLogin();
             }
         });
 
-        mLoginFormView = findViewById(R.id.login_form);
-        mProgressView = findViewById(R.id.login_progress);
+        loginScroll = findViewById(R.id.loginScroll);
+        loginProgress = findViewById(R.id.loginProgress);
     }
 
     private void attemptLogin() {
-        if (mAuthTask != null) {
+        if (userLoginTask != null) {
             return;
         }
 
-        mEmailView.setError(null);
-        mPasswordView.setError(null);
+        textUsuarioView.setError(null);
+        textSenhaView.setError(null);
 
-        String email = mEmailView.getText().toString();
-        String password = mPasswordView.getText().toString();
+        String email = textUsuarioView.getText().toString();
+        String password = textSenhaView.getText().toString();
 
         boolean cancel = false;
         View focusView = null;
 
         if (!TextUtils.isEmpty(password) && !isPasswordValid(password)) {
-            mPasswordView.setError(getString(R.string.error_invalid_password));
-            focusView = mPasswordView;
+            textSenhaView.setError(getString(R.string.error_invalid_password));
+            focusView = textSenhaView;
             cancel = true;
         }
 
         if (TextUtils.isEmpty(email)) {
-            mEmailView.setError(getString(R.string.error_field_required));
-            focusView = mEmailView;
+            textUsuarioView.setError(getString(R.string.error_field_required));
+            focusView = textUsuarioView;
             cancel = true;
         } else if (!isEmailValid(email)) {
-            mEmailView.setError(getString(R.string.error_invalid_email));
-            focusView = mEmailView;
+            textUsuarioView.setError(getString(R.string.error_invalid_email));
+            focusView = textUsuarioView;
             cancel = true;
         }
 
@@ -120,8 +107,8 @@ public class LoginActivity extends AppCompatActivity  {
             focusView.requestFocus();
         } else {
             showProgress(true);
-            mAuthTask = new UserLoginTask(email, password);
-            mAuthTask.execute((Void) null);
+            userLoginTask = new UserLoginTask(email, password);
+            userLoginTask.execute((Void) null);
         }
     }
 
@@ -141,91 +128,91 @@ public class LoginActivity extends AppCompatActivity  {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB_MR2) {
             int shortAnimTime = getResources().getInteger(android.R.integer.config_shortAnimTime);
 
-            mLoginFormView.setVisibility(show ? View.GONE : View.VISIBLE);
-            mLoginFormView.animate().setDuration(shortAnimTime).alpha(
+            loginScroll.setVisibility(show ? View.GONE : View.VISIBLE);
+            loginScroll.animate().setDuration(shortAnimTime).alpha(
                     show ? 0 : 1).setListener(new AnimatorListenerAdapter() {
                 @Override
                 public void onAnimationEnd(Animator animation) {
-                    mLoginFormView.setVisibility(show ? View.GONE : View.VISIBLE);
+                    loginScroll.setVisibility(show ? View.GONE : View.VISIBLE);
                 }
             });
 
-            mProgressView.setVisibility(show ? View.VISIBLE : View.GONE);
-            mProgressView.animate().setDuration(shortAnimTime).alpha(
+            loginProgress.setVisibility(show ? View.VISIBLE : View.GONE);
+            loginProgress.animate().setDuration(shortAnimTime).alpha(
                     show ? 1 : 0).setListener(new AnimatorListenerAdapter() {
                 @Override
                 public void onAnimationEnd(Animator animation) {
-                    mProgressView.setVisibility(show ? View.VISIBLE : View.GONE);
+                    loginProgress.setVisibility(show ? View.VISIBLE : View.GONE);
                 }
             });
         } else {
-            mProgressView.setVisibility(show ? View.VISIBLE : View.GONE);
-            mLoginFormView.setVisibility(show ? View.GONE : View.VISIBLE);
+            loginProgress.setVisibility(show ? View.VISIBLE : View.GONE);
+            loginScroll.setVisibility(show ? View.GONE : View.VISIBLE);
         }
     }
 
-
-    private void addEmailsToAutoComplete(List<String> emailAddressCollection) {
-        ArrayAdapter<String> adapter =
-                new ArrayAdapter<>(LoginActivity.this,
-                        android.R.layout.simple_dropdown_item_1line, emailAddressCollection);
-
-        mEmailView.setAdapter(adapter);
-    }
-
-
     public class UserLoginTask extends AsyncTask<Void, Void, Boolean> {
 
-        private final String mEmail;
-        private final String mPassword;
+        private UUID idUsuario;
+        private final String textUsuario;
+        private final String textSenha;
 
-        UserLoginTask(String email, String password) {
-            mEmail = email;
-            mPassword = password;
+        UserLoginTask(String usuario, String senha) {
+            this.textUsuario = usuario;
+            this.textSenha = senha;
         }
 
         @Override
         protected Boolean doInBackground(Void... params) {
 
+            boolean usuarioValido = false;
+
             try {
                 // Simulate network access.
                 Thread.sleep(2000);
 
-                List<UsuarioEntity> usuarios = (List<UsuarioEntity>)JsonData.LerJson(UsuarioEntity.TABLE_NAME);
-                for (UsuarioEntity usuario : usuarios) {
-                    if (usuario.getUsuario().equals(mEmail)) {
-                        return usuario.getSenha().equals(mPassword);
+                List<UsuarioEntity> usuarios = (List<UsuarioEntity>)JsonData.lerJson(UsuarioEntity.TABLE_NAME);
+
+                for (int i = 0; i < usuarios.size(); i++) {
+
+                    UsuarioEntity usuario = JsonData.mapper.convertValue(usuarios.get(i), UsuarioEntity.class);
+
+                    if (usuario.getUsuario().equals(textUsuario)) {
+                        this.idUsuario = usuario.getId();
+                        usuarioValido = usuario.getSenha().equals(textSenha);
+                        break;
                     }
                 }
 
             } catch (InterruptedException e) {
-                return false;
+                e.printStackTrace();
             } catch (Exception e) {
                 e.printStackTrace();
             }
 
-            return true;
+            return usuarioValido;
         }
 
         @Override
         protected void onPostExecute(final Boolean success) {
-            mAuthTask = null;
+            userLoginTask = null;
             showProgress(false);
 
             if (success) {
-                //startActivity(new Intent("br.com.idbservice.apptranspcheck.Presentation.TransporteActivity"));
 
-                Intent i = new Intent(getApplicationContext(), TransporteActivity.class);
-                startActivity(i);
+                Intent myIntent = new Intent(getApplicationContext(), TransporteActivity.class);
+                myIntent.putExtra("idUsuario",this.idUsuario);
+                startActivity(myIntent);
+
             } else {
-                mPasswordView.setError(getString(R.string.error_incorrect_password));
-                mPasswordView.requestFocus();
+                textSenhaView.setError(getString(R.string.error_incorrect_password));
+                textSenhaView.requestFocus();
             }
         }
 
         @Override
         protected void onCancelled() {
-            mAuthTask = null;
+            userLoginTask = null;
             showProgress(false);
         }
     }

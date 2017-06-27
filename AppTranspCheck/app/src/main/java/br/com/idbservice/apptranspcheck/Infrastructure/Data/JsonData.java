@@ -4,23 +4,19 @@ import com.fasterxml.jackson.core.JsonGenerationException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import java.io.IOException;
-import java.io.File;
-import android.os.Environment;
-
-import br.com.idbservice.apptranspcheck.Infrastructure.CrossCutting.FileUtils;
+import br.com.idbservice.apptranspcheck.Infrastructure.CrossCutting.FileConcerns;
 
 public class JsonData {
 
-    public static Object LerJson(String arquivoJson) throws Exception {
+    public static final ObjectMapper mapper = new ObjectMapper();
+
+    public static Object lerJson(String arquivoJson) throws Exception {
 
         ObjectMapper mapper = new ObjectMapper();
 
         try {
 
-            Object dados = mapper.readValue(FileUtils.CriarArquivo(arquivoJson), Object.class);
-
-            return dados;
+            return  mapper.readValue(FileConcerns.CriarArquivo(arquivoJson), Object.class);
 
         } catch (JsonGenerationException e) {
             e.printStackTrace();
@@ -30,13 +26,13 @@ public class JsonData {
         return null;
     }
 
-    public static void GravarJson(Object dados, String arquivoJson) throws Exception {
+    public static void gravarJson(Object dados, String arquivoJson) throws Exception {
 
         ObjectMapper mapper = new ObjectMapper();
 
         try {
 
-            mapper.writeValue(FileUtils.CriarArquivo(arquivoJson), dados);
+            mapper.writeValue(FileConcerns.CriarArquivo(arquivoJson), dados);
 
         } catch (JsonGenerationException e) {
             e.printStackTrace();
@@ -45,14 +41,14 @@ public class JsonData {
         }
     }
 
-    public static void AtualizarJson(Object dados, String arquivoJson) throws Exception {
+    public static void atualizarJson(Object dados, String arquivoJson) throws Exception {
 
         ObjectMapper mapper = new ObjectMapper();
 
         try {
 
             // Convert object to JSON string and save into a file directly
-            mapper.writeValue(FileUtils.CriarArquivo(arquivoJson), dados);
+            mapper.writeValue(FileConcerns.CriarArquivo(arquivoJson), dados);
 
             // Convert object to JSON string
             String jsonInString = mapper.writeValueAsString(dados);

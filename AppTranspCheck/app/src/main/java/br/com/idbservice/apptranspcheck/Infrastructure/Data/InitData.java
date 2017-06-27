@@ -14,7 +14,7 @@ public class InitData {
             Object dataJsonUsuarios = null;
 
             try {
-                JsonData.LerJson(UsuarioEntity.TABLE_NAME);
+                JsonData.lerJson(UsuarioEntity.TABLE_NAME);
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -29,7 +29,7 @@ public class InitData {
                 usuarios.add(usuario1);
                 usuarios.add(usuario2);
 
-                JsonData.GravarJson(usuarios, UsuarioEntity.TABLE_NAME);
+                JsonData.gravarJson(usuarios, UsuarioEntity.TABLE_NAME);
 
                 // Criar transportes por usuario
                 TransporteEntity transporte1usuario1 = new TransporteEntity("Av São Joao 1, Sao Paulo",
@@ -51,7 +51,7 @@ public class InitData {
                 transportes.add(transporte1usuario2);
                 transportes.add(transporte2usuario2);
 
-                JsonData.GravarJson(transportes, TransporteEntity.TABLE_NAME);
+                JsonData.gravarJson(transportes, TransporteEntity.TABLE_NAME);
             }
 
         } catch (Exception e) {

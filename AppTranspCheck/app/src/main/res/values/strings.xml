@@ -12,6 +12,15 @@
     <string name="error_field_required">Esse campo e obrigatorio</string>
 
     <string name="activity_login_title">Login</string>
+
+    <!-- Strings related to transport -->
     <string name="activity_transport_title">Transporte Ativo</string>
+
+    <string name="label_origem">Origem</string>
+    <string name="label_destino">Destino</string>
+
+    <string name="btn_label_canhoto">+ Canhoto</string>
+    <string name="btn_label_assinatura">+ Assinatura</string>
+    <string name="btn_label_enviar">Enviar</string>
 
 </resources>

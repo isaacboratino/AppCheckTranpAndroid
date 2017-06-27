@@ -7,7 +7,7 @@ import java.io.IOException;
 
 import br.com.idbservice.apptranspcheck.R;
 
-public class FileUtils {
+public class FileConcerns {
 
     public static File CriarArquivo(String nomeArquivo) throws Exception {
 

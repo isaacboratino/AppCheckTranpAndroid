@@ -1,18 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="br.com.idbservice.apptranspcheck.Presentation.TransporteActivity">
 
     <ScrollView
-        android:id="@+id/login_form"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
         <LinearLayout
-            android:id="@+id/email_login_form"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
@@ -22,10 +23,85 @@
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="16dp"
                 android:hint="@string/activity_transport_title"
-                android:textStyle="bold"
+                android:textColorHint="@color/colorButtonBackGreen"
                 android:textSize="11pt"
-                android:textColorHint="@color/colorButtonBackGreen"/>
+                android:textStyle="bold" />
+
+            <android.support.design.widget.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <EditText
+                    android:id="@+id/textOrigem"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/label_origem"
+                    android:inputType="none"
+                    android:maxLines="1" />
+
+            </android.support.design.widget.TextInputLayout>
+
+            <android.support.design.widget.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <EditText
+                    android:id="@+id/textDestino"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/label_destino"
+                    android:inputType="none"
+                    android:maxLines="1" />
+
+            </android.support.design.widget.TextInputLayout>
+
+            <ImageView
+                android:id="@+id/imgCanhoto"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginTop="16dp"
+                android:src="@mipmap/no_image" />
+
+            <Button
+                android:id="@+id/btnCanhoto"
+                style="?android:textAppearanceSmall"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginTop="16dp"
+                android:background="@color/colorPrimary"
+                android:text="@string/btn_label_canhoto"
+                android:textColor="@color/colorButtonHint"
+                android:textStyle="bold" />
+
+            <ImageView
+                android:id="@+id/imgAssinatura"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginTop="16dp"
+                android:src="@mipmap/no_image" />
+
+            <Button
+                android:id="@+id/btnAssinatura"
+                style="?android:textAppearanceSmall"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:background="@color/colorPrimary"
+                android:text="@string/btn_label_assinatura"
+                android:textColor="@color/colorButtonHint"
+                android:textStyle="bold" />
+
+            <Button
+                android:id="@+id/btnEnviar"
+                style="?android:textAppearanceSmall"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:background="@color/colorButtonBackGreen"
+                android:text="@string/btn_label_enviar"
+                android:textColor="@color/colorButtonHint"
+                android:textStyle="bold" />
+
         </LinearLayout>
     </ScrollView>
-
-</android.support.constraint.ConstraintLayout>
+</LinearLayout>
