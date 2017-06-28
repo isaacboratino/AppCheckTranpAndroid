@@ -7,6 +7,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import java.util.List;
 
@@ -15,12 +16,12 @@ import br.com.idbservice.apptranspcheck.Infrastructure.CrossCutting.CameraImageC
 import br.com.idbservice.apptranspcheck.Infrastructure.Data.JsonData;
 import br.com.idbservice.apptranspcheck.R;
 
-public class TransporteActivity extends AppCompatActivity {
+public class TransporteActivity extends BaseActivity {
 
     private String IdUsuario;
 
-    private EditText textOrigemView;
-    private EditText textDestinoView;
+    private TextView textOrigemView;
+    private TextView textDestinoView;
     private ImageView imgCanhoto;
     private ImageView imgAssinatura;
 
@@ -35,6 +36,7 @@ public class TransporteActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_transporte);
 
+        super.exibirLogo();
         this.inicializarComponentes();
         this.recuperarTransporteUsuario();
     }
@@ -46,8 +48,8 @@ public class TransporteActivity extends AppCompatActivity {
 
     private void inicializarComponentes() {
 
-        this.textOrigemView = (EditText) findViewById(R.id.textOrigem);
-        this.textDestinoView = (EditText) findViewById(R.id.textDestino);
+        this.textOrigemView = (TextView) findViewById(R.id.textOrigem);
+        this.textDestinoView = (TextView) findViewById(R.id.textDestino);
 
         this.imgCanhoto = (ImageView) findViewById(R.id.imgCanhoto);
         this.imgAssinatura = (ImageView) findViewById(R.id.imgAssinatura);

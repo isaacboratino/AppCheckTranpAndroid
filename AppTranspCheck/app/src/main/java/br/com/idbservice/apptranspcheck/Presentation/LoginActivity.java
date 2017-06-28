@@ -32,7 +32,7 @@ import br.com.idbservice.apptranspcheck.R;
 import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
 
 
-public class LoginActivity extends AppCompatActivity  {
+public class LoginActivity extends BaseActivity  {
 
     private AsyncTask<Void, Void, Boolean> userLoginTask = null;
     private AutoCompleteTextView textUsuarioView;
@@ -44,57 +44,17 @@ public class LoginActivity extends AppCompatActivity  {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-        verificaPermissoes();
 
-        boolean b  = ValidationConcerns.isExternalStorageWritable();
-        boolean c = ValidationConcerns.isExternalStorageWritable();
+        super.verificaPermissoes();
+        super.exibirLogo();
 
         // Carga inicial caso nao exista
         InitData.cargaInicial();
 
         this.inicializarComponentes();
-
-    }
-
-    public boolean isExternalStorageWritable() {
-        String state = Environment.getExternalStorageState();
-        if (Environment.MEDIA_MOUNTED.equals(state)) {
-            return true;
-        }
-        return false;
-    }
-
-    public  boolean isExternalStorageReadable() {
-        String state = Environment.getExternalStorageState();
-        if (Environment.MEDIA_MOUNTED.equals(state) ||
-                Environment.MEDIA_MOUNTED_READ_ONLY.equals(state)) {
-            return true;
-        }
-        return false;
-    }
-
-    private boolean verificaPermissoes() {
-        try {
-            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
-                return true;
-            }
-            if (checkSelfPermission(WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
-                return true;
-            }
-            if (shouldShowRequestPermissionRationale(WRITE_EXTERNAL_STORAGE)) {
-                requestPermissions(new String[]{WRITE_EXTERNAL_STORAGE}, 0);
-            } else {
-                requestPermissions(new String[]{WRITE_EXTERNAL_STORAGE}, 0);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        return false;
     }
 
     private void inicializarComponentes() {
-
         textUsuarioView = (AutoCompleteTextView) findViewById(R.id.textUsuario);
 
         setTextSenhaView((EditText) findViewById(R.id.textSenha));

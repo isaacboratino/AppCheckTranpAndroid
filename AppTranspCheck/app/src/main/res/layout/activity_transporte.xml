@@ -13,113 +13,177 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <LinearLayout
+        <android.support.v7.widget.CardView xmlns:card_view="http://schemas.android.com/apk/res-auto"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:layout_height="match_parent"
+            android:layout_margin="@dimen/cardview_size_margin"
+            android:layout_marginBottom="@dimen/cardview_size_margin_bottom"
+            card_view:cardCornerRadius="@dimen/cardview_size_corner_radius"
+            card_view:cardElevation="@dimen/cardview_size_elevation"
+            card_view:contentPadding="@dimen/cardview_size_padding">
 
-            <TextView
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="@dimen/activity_vertical_margin"
-                android:hint="@string/activity_transport_title"
-                android:textColorHint="@color/colorButtonBackGreen"
-                android:textSize="@dimen/title_size_view"
-                android:textStyle="bold" />
+                android:orientation="vertical">
 
-            <android.support.design.widget.TextInputLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
-                <EditText
-                    android:id="@+id/textOrigem"
+                <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="@string/label_origem"
+                    android:layout_marginBottom="@dimen/activity_vertical_margin"
+                    android:hint="@string/activity_transport_title"
+                    android:textColorHint="@color/colorButtonBackGreen"
+                    android:textSize="@dimen/title_size_view"
+                    android:textStyle="bold" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@mipmap/icon_maps_pointer" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:text="@string/label_origem" />
+
+                        <TextView
+                            android:id="@+id/textOrigem"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:textSize="@dimen/text_size_button"
+                            style="@style/Widget.AppCompat.EditText"/>
+                    </LinearLayout>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@mipmap/icon_maps_pointer" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:text="@string/label_destino"
+                             />
+
+                        <TextView
+                            android:id="@+id/textDestino"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:textSize="@dimen/text_size_button"
+                            style="@style/Widget.AppCompat.EditText"/>
+                    </LinearLayout>
+
+                </LinearLayout>
+
+                <android.support.v7.widget.CardView xmlns:card_view="http://schemas.android.com/apk/res-auto"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_margin="5dp"
+                    card_view:cardCornerRadius="2dp"
+                    card_view:cardElevation="6dp">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
+
+                        <ImageView
+                            android:id="@+id/imgCanhoto"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:padding="@dimen/activity_horizontal_margin"
+                            android:src="@mipmap/no_image"
+                            android:visibility="gone" />
+
+                        <Button
+                            android:id="@+id/btnCanhoto"
+                            style="?android:textAppearanceSmall"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:background="@color/colorPrimary"
+                            android:drawableRight="@mipmap/add_photo_white_icon"
+                            android:gravity="left|center_vertical"
+                            android:padding="@dimen/activity_horizontal_margin"
+                            android:paddingRight="@dimen/activity_horizontal_margin"
+                            android:text="@string/btn_label_canhoto"
+                            android:textColor="@color/colorButtonHint"
+                            android:textSize="@dimen/text_size_button"
+                            android:textStyle="bold" />
+                    </LinearLayout>
+                </android.support.v7.widget.CardView>
+
+                <android.support.v7.widget.CardView xmlns:card_view="http://schemas.android.com/apk/res-auto"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_margin="5dp"
+                    card_view:cardCornerRadius="2dp"
+                    card_view:cardElevation="6dp">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
+
+                        <ImageView
+                            android:id="@+id/imgAssinatura"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:padding="@dimen/activity_horizontal_margin"
+                            android:src="@mipmap/no_image"
+                            android:visibility="gone" />
+
+                        <Button
+                            android:id="@+id/btnAssinatura"
+                            style="?android:textAppearanceSmall"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:background="@color/colorPrimary"
+                            android:drawableRight="@mipmap/add_photo_white_icon"
+                            android:gravity="left|center_vertical"
+                            android:padding="@dimen/activity_horizontal_margin"
+                            android:paddingRight="@dimen/activity_horizontal_margin"
+                            android:text="@string/btn_label_assinatura"
+                            android:textColor="@color/colorButtonHint"
+                            android:textSize="@dimen/text_size_button"
+                            android:textStyle="bold" />
+                    </LinearLayout>
+                </android.support.v7.widget.CardView>
+
+                <Button
+                    android:id="@+id/btnEnviar"
+                    style="?android:textAppearanceSmall"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/activity_vertical_margin"
+                    android:background="@color/colorButtonBackGreen"
+                    android:padding="@dimen/activity_horizontal_margin"
+                    android:text="@string/btn_label_enviar"
+                    android:textColor="@color/colorButtonHint"
                     android:textSize="@dimen/text_size_button"
-                    android:inputType="none"
-                    android:maxLines="1" />
+                    android:textStyle="bold" />
 
-            </android.support.design.widget.TextInputLayout>
-
-            <android.support.design.widget.TextInputLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
-                <EditText
-                    android:id="@+id/textDestino"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:hint="@string/label_destino"
-                    android:inputType="none"
-                    android:maxLines="1" />
-
-            </android.support.design.widget.TextInputLayout>
-
-            <ImageView
-                android:id="@+id/imgCanhoto"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginTop="@dimen/activity_vertical_margin"
-                android:padding="@dimen/activity_horizontal_margin"
-                android:background="@color/colorBackgroundPhotos"
-                android:src="@mipmap/no_image"
-                android:visibility="gone"/>
-
-            <Button
-                android:id="@+id/btnCanhoto"
-                style="?android:textAppearanceSmall"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:background="@color/colorPrimary"
-                android:text="@string/btn_label_canhoto"
-                android:textColor="@color/colorButtonHint"
-                android:textSize="@dimen/text_size_button"
-                android:gravity="left|center_vertical"
-                android:padding="@dimen/activity_horizontal_margin"
-                android:paddingRight="@dimen/activity_horizontal_margin"
-                android:drawableRight="@mipmap/add_photo_white_icon"
-                android:textStyle="bold"
-                />
-
-            <ImageView
-                android:id="@+id/imgAssinatura"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginTop="16dp"
-                android:background="@color/colorBackgroundPhotos"
-                android:src="@mipmap/no_image"
-                android:visibility="gone"/>
-
-            <Button
-                android:id="@+id/btnAssinatura"
-                style="?android:textAppearanceSmall"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/activity_vertical_margin"
-                android:background="@color/colorPrimary"
-                android:text="@string/btn_label_assinatura"
-                android:textColor="@color/colorButtonHint"
-                android:textSize="@dimen/text_size_button"
-                android:gravity="left|center_vertical"
-                android:padding="@dimen/activity_horizontal_margin"
-                android:paddingRight="@dimen/activity_horizontal_margin"
-                android:drawableRight="@mipmap/add_photo_white_icon"
-                android:textStyle="bold" />
-
-            <Button
-                android:id="@+id/btnEnviar"
-                style="?android:textAppearanceSmall"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/activity_vertical_margin"
-                android:padding="@dimen/activity_horizontal_margin"
-                android:textSize="@dimen/text_size_button"
-                android:background="@color/colorButtonBackGreen"
-                android:text="@string/btn_label_enviar"
-                android:textColor="@color/colorButtonHint"
-                android:textStyle="bold" />
-
-        </LinearLayout>
+            </LinearLayout>
+        </android.support.v7.widget.CardView>
     </ScrollView>
 </LinearLayout>

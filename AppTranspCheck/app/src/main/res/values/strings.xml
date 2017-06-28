@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Transp Check ✓</string>
+    <string name="app_name">Transp Check</string>
 
     <string name="app_full_package">br.com.idbservice.apptranspcheck</string>
 
@@ -8,7 +8,7 @@
     <string name="prompt_password">Senha (optional)</string>
     <string name="action_sign_in">Entrar</string>
     <string name="action_sign_in_short">Entrar</string>
-    <string name="error_invalid_email">Esse endereco de email e invalido</string>
+    <string name="error_invalid_email">Esse usuario e invalido</string>
     <string name="error_invalid_password">A senha e muito curta</string>
     <string name="error_incorrect_password">A senha esta incorreta</string>
     <string name="error_field_required">Esse campo e obrigatorio</string>

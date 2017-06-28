@@ -11,9 +11,6 @@ public class FileConcerns {
 
         try {
 
-            boolean b  = ValidationConcerns.isExternalStorageWritable();
-            boolean c = ValidationConcerns.isExternalStorageWritable();
-
             File diretorio = new File(Environment.getExternalStorageDirectory() + File.separator, "jsondata");
 
             boolean success = true;
