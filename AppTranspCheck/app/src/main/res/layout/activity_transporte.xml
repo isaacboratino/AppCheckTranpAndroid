@@ -21,10 +21,10 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="16dp"
+                android:layout_marginBottom="@dimen/activity_vertical_margin"
                 android:hint="@string/activity_transport_title"
                 android:textColorHint="@color/colorButtonBackGreen"
-                android:textSize="11pt"
+                android:textSize="@dimen/title_size_view"
                 android:textStyle="bold" />
 
             <android.support.design.widget.TextInputLayout
@@ -36,6 +36,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="@string/label_origem"
+                    android:textSize="@dimen/text_size_button"
                     android:inputType="none"
                     android:maxLines="1" />
 
@@ -59,36 +60,51 @@
                 android:id="@+id/imgCanhoto"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_marginTop="16dp"
-                android:src="@mipmap/no_image" />
+                android:layout_marginTop="@dimen/activity_vertical_margin"
+                android:padding="@dimen/activity_horizontal_margin"
+                android:background="@color/colorBackgroundPhotos"
+                android:src="@mipmap/no_image"
+                android:visibility="gone"/>
 
             <Button
                 android:id="@+id/btnCanhoto"
                 style="?android:textAppearanceSmall"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_marginTop="16dp"
                 android:background="@color/colorPrimary"
                 android:text="@string/btn_label_canhoto"
                 android:textColor="@color/colorButtonHint"
-                android:textStyle="bold" />
+                android:textSize="@dimen/text_size_button"
+                android:gravity="left|center_vertical"
+                android:padding="@dimen/activity_horizontal_margin"
+                android:paddingRight="@dimen/activity_horizontal_margin"
+                android:drawableRight="@mipmap/add_photo_white_icon"
+                android:textStyle="bold"
+                />
 
             <ImageView
                 android:id="@+id/imgAssinatura"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_marginTop="16dp"
-                android:src="@mipmap/no_image" />
+                android:background="@color/colorBackgroundPhotos"
+                android:src="@mipmap/no_image"
+                android:visibility="gone"/>
 
             <Button
                 android:id="@+id/btnAssinatura"
                 style="?android:textAppearanceSmall"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
+                android:layout_marginTop="@dimen/activity_vertical_margin"
                 android:background="@color/colorPrimary"
                 android:text="@string/btn_label_assinatura"
                 android:textColor="@color/colorButtonHint"
+                android:textSize="@dimen/text_size_button"
+                android:gravity="left|center_vertical"
+                android:padding="@dimen/activity_horizontal_margin"
+                android:paddingRight="@dimen/activity_horizontal_margin"
+                android:drawableRight="@mipmap/add_photo_white_icon"
                 android:textStyle="bold" />
 
             <Button
@@ -96,7 +112,9 @@
                 style="?android:textAppearanceSmall"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
+                android:layout_marginTop="@dimen/activity_vertical_margin"
+                android:padding="@dimen/activity_horizontal_margin"
+                android:textSize="@dimen/text_size_button"
                 android:background="@color/colorButtonBackGreen"
                 android:text="@string/btn_label_enviar"
                 android:textColor="@color/colorButtonHint"

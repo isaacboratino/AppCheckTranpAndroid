@@ -16,7 +16,7 @@ public class JsonData {
 
         try {
 
-            return  mapper.readValue(FileConcerns.CriarArquivo(arquivoJson), Object.class);
+            return  mapper.readValue(FileConcerns.criarArquivo(arquivoJson), Object.class);
 
         } catch (JsonGenerationException e) {
             e.printStackTrace();
@@ -32,7 +32,7 @@ public class JsonData {
 
         try {
 
-            mapper.writeValue(FileConcerns.CriarArquivo(arquivoJson), dados);
+            mapper.writeValue(FileConcerns.criarArquivo(arquivoJson), dados);
 
         } catch (JsonGenerationException e) {
             e.printStackTrace();
@@ -48,7 +48,7 @@ public class JsonData {
         try {
 
             // Convert object to JSON string and save into a file directly
-            mapper.writeValue(FileConcerns.CriarArquivo(arquivoJson), dados);
+            mapper.writeValue(FileConcerns.criarArquivo(arquivoJson), dados);
 
             // Convert object to JSON string
             String jsonInString = mapper.writeValueAsString(dados);

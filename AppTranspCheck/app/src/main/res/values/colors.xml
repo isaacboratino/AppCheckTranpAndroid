@@ -6,4 +6,6 @@
 
     <color name="colorButtonBackGreen">#1EAD1E</color>
     <color name="colorButtonHint">#FFFFFF</color>
+
+    <color name="colorBackgroundPhotos">#DEDEDE</color>
 </resources>

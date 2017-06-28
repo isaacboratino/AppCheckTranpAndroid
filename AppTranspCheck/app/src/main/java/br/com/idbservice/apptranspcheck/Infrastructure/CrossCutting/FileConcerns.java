@@ -5,15 +5,16 @@ import android.os.Environment;
 import java.io.File;
 import java.io.IOException;
 
-import br.com.idbservice.apptranspcheck.R;
-
 public class FileConcerns {
 
-    public static File CriarArquivo(String nomeArquivo) throws Exception {
+    public static File criarArquivo(String nomeArquivo) throws Exception {
 
         try {
 
-            File diretorio = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + File.separator  + "jsondata");
+            boolean b  = ValidationConcerns.isExternalStorageWritable();
+            boolean c = ValidationConcerns.isExternalStorageWritable();
+
+            File diretorio = new File(Environment.getExternalStorageDirectory() + File.separator, "jsondata");
 
             boolean success = true;
 

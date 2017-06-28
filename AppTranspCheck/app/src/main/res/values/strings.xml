@@ -1,6 +1,8 @@
 <resources>
     <string name="app_name">Transp Check ✓</string>
 
+    <string name="app_full_package">br.com.idbservice.apptranspcheck</string>
+
     <!-- Strings related to login -->
     <string name="prompt_email">Email</string>
     <string name="prompt_password">Senha (optional)</string>
@@ -19,8 +21,7 @@
     <string name="label_origem">Origem</string>
     <string name="label_destino">Destino</string>
 
-    <string name="btn_label_canhoto">+ Canhoto</string>
-    <string name="btn_label_assinatura">+ Assinatura</string>
+    <string name="btn_label_canhoto">Canhoto</string>
+    <string name="btn_label_assinatura">Assinatura</string>
     <string name="btn_label_enviar">Enviar</string>
-
 </resources>

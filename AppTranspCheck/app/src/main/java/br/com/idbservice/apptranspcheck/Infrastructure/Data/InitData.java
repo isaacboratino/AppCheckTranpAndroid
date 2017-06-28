@@ -7,7 +7,7 @@ import br.com.idbservice.apptranspcheck.Entities.*;
 
 public class InitData {
 
-    public static void CargaInicial() {
+    public static void cargaInicial() {
 
         try {
             // Verifico se ja existem dados gravados
