@@ -7,16 +7,13 @@ import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
-import android.provider.MediaStore;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.content.FileProvider;
 import android.view.View;
 
 import com.simplify.ink.InkView;
 
-import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.FileOutputStream;
 
 import br.com.idbservice.apptranspcheck.Infrastructure.CrossCutting.FileConcerns;
 import br.com.idbservice.apptranspcheck.R;
