@@ -2,22 +2,27 @@ package br.com.idbservice.apptranspcheck.Presentation;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
+import android.provider.MediaStore;
+import android.support.v4.content.FileProvider;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import java.util.List;
+import java.io.File;
 
 import br.com.idbservice.apptranspcheck.Entities.TransporteEntity;
-import br.com.idbservice.apptranspcheck.Infrastructure.CrossCutting.CameraImageConcerns;
-import br.com.idbservice.apptranspcheck.Infrastructure.Data.JsonData;
+import br.com.idbservice.apptranspcheck.Infrastructure.CrossCutting.FileConcerns;
+import br.com.idbservice.apptranspcheck.Infrastructure.Data.TransporteData;
 import br.com.idbservice.apptranspcheck.R;
 
 public class TransporteActivity extends BaseActivity {
 
-    private String IdUsuario;
+    private String idUsuario;
 
     private TextView textOrigemView;
     private TextView textDestinoView;
@@ -28,30 +33,40 @@ public class TransporteActivity extends BaseActivity {
     private Button btnAssinatura;
     private Button btnEnviar;
 
-    private CameraImageConcerns camera;
+    private Uri uriImageAssinatura;
 
-    static final int REQUEST_ASSINATURA = 2;
+    static final int INTENT_REQUEST_CODE_CANHOTO = 1;
+    static final int INTENT_REQUEST_CODE_ASSINATURA = 2;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_transporte);
 
-        super.exibirLogo();
-        this.inicializarComponentes();
-        this.recuperarTransporteUsuario();
+        try {
+            super.exibirLogo();
+            this.inicializarComponentes();
+            this.recuperarTransporteUsuario();
+        } catch (Exception e) {
+            super.tratarException(e);
+        }
+
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 
-        if (requestCode == TransporteActivity.REQUEST_ASSINATURA && data != null) {
-
-            Intent myIntent = getIntent();
-            this.imgAssinatura.setImageBitmap((Bitmap) myIntent.getExtras().get("imgAssinatura"));
-
-        } else {
-            camera.activityResultProvider(requestCode, resultCode, data);
+        switch (requestCode) {
+            case INTENT_REQUEST_CODE_CANHOTO :
+                this.imgCanhoto.setImageURI(this.uriImageAssinatura);
+                this.imgCanhoto.setVisibility(View.VISIBLE);
+                break;
+            case INTENT_REQUEST_CODE_ASSINATURA :
+                if (data != null) {
+                    this.imgAssinatura.setImageURI((Uri)data.getExtras().get("imgAssinatura"));
+                    this.imgAssinatura.setVisibility(View.VISIBLE);
+                }
+                break;
         }
     }
 
@@ -67,69 +82,86 @@ public class TransporteActivity extends BaseActivity {
         this.btnAssinatura = (Button) findViewById(R.id.btnAssinatura);
         this.btnEnviar = (Button) findViewById(R.id.btnEnviar);
 
-        this.btnCanhoto.setOnClickListener(new View.OnClickListener() {
+        this.btnCanhoto.setOnClickListener(new View.OnClickListener()  {
             @Override
             public void onClick(View view) {
-                recuperarFotoCanhoto();
+                try {
+                    recuperarFotoCanhoto();
+                } catch (Exception e) {
+                    tratarException(e);
+                }
             }
         });
 
         this.btnAssinatura.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                recuperarFotoAssinatura();
-            }
-        });
-
-        this.camera = new CameraImageConcerns();
-    }
-
-    private void recuperarTransporteUsuario() {
-        try {
-            // Recuperar parametros enviados pela view anterior
-            Intent myIntent = getIntent();
-            this.setIdUsuario(myIntent.getExtras().get("idUsuario").toString());
-
-            List<TransporteEntity> transportes = (List<TransporteEntity>) JsonData.lerJson(TransporteEntity.TABLE_NAME);
-            for (int i = 0; i < transportes.size(); i++) {
-
-                TransporteEntity transporte = JsonData.mapper.convertValue(transportes.get(i), TransporteEntity.class);
-
-                // Recuperar transporte ativo do usuario
-                if (transporte.getUsuarioEntity().getId().toString().equals(this.getIdUsuario()) &&
-                        transporte.getStatus() == TransporteEntity.STATUS_ATIVO) {
-                    this.textOrigemView.setText(transporte.getEnderecoOrigem());
-                    this.textDestinoView.setText(transporte.getEnderecoDestino());
-                    break;
+                try {
+                    recuperarFotoAssinatura();
+                } catch (Exception e) {
+                    tratarException(e);
                 }
             }
+        });
+    }
+
+    private void recuperarTransporteUsuario() throws Exception {
+        try {
+            // Recuperar parametros enviados pela view anterior
+            this.idUsuario = getIntent().getExtras().get("idUsuario").toString();
+
+            TransporteEntity transporte = new TransporteData().findStatusByIdUsuario(TransporteEntity.STATUS_ATIVO, idUsuario);
+
+            if (transporte != null) {
+                this.textOrigemView.setText(transporte.getEnderecoOrigem());
+                this.textDestinoView.setText(transporte.getEnderecoDestino());
+            } else
+                throw new Exception("Não foi encontrado nenhum transporte ativo para esse usuario.");
+
         } catch (Exception e) {
-            System.out.println(e.fillInStackTrace());
+            throw new Exception("Erro ao tentar recuperar transporte ativo do usuario ", e);
         }
     }
 
-    private void recuperarFotoCanhoto() {
-        camera.abrirCamera(this);
+    public void recuperarFotoCanhoto() throws Exception  {
+
+        Intent cameraIntentView = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+
+        File photoFile = criarImagemTemporaria();
+
+        if (photoFile != null) {
+
+            try {
+
+                uriImageAssinatura = FileProvider.getUriForFile(getApplicationContext(),
+                        getString(R.string.app_full_package),
+                        photoFile);
+
+                cameraIntentView.putExtra(MediaStore.EXTRA_OUTPUT, uriImageAssinatura);
+
+                this.startActivityForResult(cameraIntentView, INTENT_REQUEST_CODE_CANHOTO);
+
+            } catch (Exception e) {
+                throw new Exception(e);
+            }
+        }
     }
 
-    private void recuperarFotoAssinatura() {
+    private File criarImagemTemporaria() throws Exception {
+
+        String nomeArquivo = "canhoto_" + this.idUsuario + "_";
+
+        return FileConcerns.criarArquivoTemporario(nomeArquivo, ".jpg", getExternalFilesDir(Environment.DIRECTORY_PICTURES));
+    }
+
+    private void recuperarFotoAssinatura() throws Exception  {
         try {
             Intent inkIntentView = new Intent(this, InkActivity.class);
-            startActivityForResult(inkIntentView,REQUEST_ASSINATURA);
+            inkIntentView.putExtra("idUsuario",idUsuario);
+            startActivityForResult(inkIntentView, INTENT_REQUEST_CODE_ASSINATURA);
         } catch (Exception e) {
             System.out.print(e.getMessage());
         }
     }
 
-    public String getIdUsuario() {
-        return IdUsuario;
-    }
-
-    public void setIdUsuario(String idUsuario) {
-        IdUsuario = idUsuario;
-    }
-
-    public ImageView getImgCanhoto() {
-        return imgCanhoto;
-    }
 }

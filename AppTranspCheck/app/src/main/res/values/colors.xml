@@ -12,4 +12,5 @@
     <color name="colorButtonHint">@color/colorLightYellow</color>
 
     <color name="colorBackgroundPhotos">#DEDEDE</color>
+    <color name="colorWhite">#FFFFFF</color>
 </resources>

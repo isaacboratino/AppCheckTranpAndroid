@@ -4,12 +4,21 @@ import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
+import android.provider.MediaStore;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.content.FileProvider;
 import android.view.View;
 
 import com.simplify.ink.InkView;
 
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
+
+import br.com.idbservice.apptranspcheck.Infrastructure.CrossCutting.FileConcerns;
 import br.com.idbservice.apptranspcheck.R;
 
 public class InkActivity extends BaseActivity {
@@ -49,23 +58,48 @@ public class InkActivity extends BaseActivity {
         this.fabOk.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //Bitmap drawing = this.inkView.getBitmap();
-
-                Intent returnIntent = new Intent();
-                returnIntent.putExtra("imgAssinatura", recuperarAssinatura());
-                setResult(Activity.RESULT_OK,returnIntent);
-                InkActivity.this.finish();
+                try {
+                    recuperarAssinatura();
+                } catch (Exception e) {
+                    tratarException(e);
+                }
             }
         });
     }
 
-    private Bitmap recuperarAssinatura() {
+    public void recuperarAssinatura() throws Exception  {
 
-        return this.inkView.getBitmap();
+        Bitmap bitmap = this.inkView.getBitmap(getResources().getColor(R.color.colorWhite));
 
-        /*Intent returnIntent = new Intent();
-        returnIntent.putExtra("imgAssinatura", drawing);
-        setResult(Activity.RESULT_OK,returnIntent);
-        InkActivity.this.finish();*/
+        File imgAssinatura = criarImagemTemporaria();
+
+        FileConcerns.bitmapToJpg(bitmap, imgAssinatura);
+
+        if (imgAssinatura != null) {
+
+            try {
+
+                Uri uriImageAssinatura = FileProvider.getUriForFile(getApplicationContext(),
+                        getString(R.string.app_full_package),
+                        imgAssinatura);
+
+                Intent returnIntent = new Intent();
+                returnIntent.putExtra("imgAssinatura", uriImageAssinatura);
+                setResult(Activity.RESULT_OK, returnIntent);
+
+                InkActivity.this.finish();
+                this.finish();
+
+            } catch (Exception e) {
+                throw new Exception(e);
+            }
+        }
+    }
+
+    private File criarImagemTemporaria() throws Exception {
+
+        String nomeArquivo = "assinatura_" + getIntent().getExtras().get("idUsuario").toString() + "_";
+
+        return FileConcerns.criarArquivoTemporario(nomeArquivo, ".jpg", getExternalFilesDir(Environment.DIRECTORY_PICTURES));
     }
 }

@@ -3,6 +3,7 @@ package br.com.idbservice.apptranspcheck.Presentation;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.support.v7.app.AppCompatActivity;
+import android.widget.Toast;
 
 import br.com.idbservice.apptranspcheck.R;
 
@@ -37,4 +38,7 @@ public class BaseActivity extends AppCompatActivity {
         return false;
     }
 
+    protected void tratarException(Exception e) {
+        Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show();
+    }
 }

@@ -131,6 +131,7 @@
                             android:textColor="@color/colorButtonHint"
                             android:textSize="@dimen/text_size_button"
                             android:textStyle="bold" />
+
                     </LinearLayout>
                 </android.support.v7.widget.CardView>
 
@@ -149,16 +150,18 @@
                         <ImageView
                             android:id="@+id/imgAssinatura"
                             android:layout_width="match_parent"
-                            android:layout_height="match_parent"
+                            android:layout_height="wrap_content"
                             android:padding="@dimen/activity_horizontal_margin"
+                            android:cropToPadding="true"
                             android:src="@mipmap/no_image"
-                            android:visibility="gone" />
+                            android:visibility="gone"
+                            android:adjustViewBounds="true"/>
 
                         <Button
                             android:id="@+id/btnAssinatura"
                             style="?android:textAppearanceSmall"
                             android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
+                            android:layout_height="match_parent"
                             android:background="@color/colorPrimary"
                             android:drawableRight="@mipmap/add_photo_white_icon"
                             android:gravity="left|center_vertical"
@@ -168,6 +171,7 @@
                             android:textColor="@color/colorButtonHint"
                             android:textSize="@dimen/text_size_button"
                             android:textStyle="bold" />
+
                     </LinearLayout>
                 </android.support.v7.widget.CardView>
 
@@ -186,7 +190,6 @@
 
             </LinearLayout>
         </android.support.v7.widget.CardView>
-
     </ScrollView>
 </LinearLayout>
 
