@@ -3,6 +3,8 @@
 
     <string name="app_full_package">br.com.idbservice.apptranspcheck</string>
 
+    <string name="app_server">http://192.168.0.1:3000</string>
+
     <!-- Strings related to login -->
     <string name="prompt_email">Email</string>
     <string name="prompt_password">Senha (optional)</string>

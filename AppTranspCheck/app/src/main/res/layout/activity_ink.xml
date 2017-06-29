@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="br.com.idbservice.apptranspcheck.Presentation.InkActivity">
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/fabClose"
+        app:fabSize="normal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/activity_horizontal_margin"
+        android:layout_alignParentRight="true"
+        android:backgroundTint="@color/colorPrimaryDark"
+        android:src="@mipmap/ic_close" />
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/fabOk"
+        app:fabSize="normal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/activity_horizontal_margin"
+        android:layout_below="@+id/fabClose"
+        android:layout_alignParentRight="true"
+        android:backgroundTint="@color/colorButtonBackGreen"
+        android:src="@mipmap/ic_check" />
+
+    <com.simplify.ink.InkView
+        android:id="@+id/inkView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:layout_editor_absoluteY="8dp"
+        tools:layout_editor_absoluteX="8dp"
+        app:inkFlags="interpolation|responsiveWeight" />
+
+</RelativeLayout>

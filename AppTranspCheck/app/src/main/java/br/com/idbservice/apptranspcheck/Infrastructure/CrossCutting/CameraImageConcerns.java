@@ -23,8 +23,6 @@ import br.com.idbservice.apptranspcheck.R;
 
 public class CameraImageConcerns {
 
-    private static final int REQUEST_IMAGE_CAPTURE = 1;
-
     private TransporteActivity currentActivity;
     private String diretorioFoto;
     private Uri fotoURI;

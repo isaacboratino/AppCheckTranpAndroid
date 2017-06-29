@@ -1,11 +1,10 @@
 package br.com.idbservice.apptranspcheck.Presentation;
 
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -31,6 +30,8 @@ public class TransporteActivity extends BaseActivity {
 
     private CameraImageConcerns camera;
 
+    static final int REQUEST_ASSINATURA = 2;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -43,7 +44,15 @@ public class TransporteActivity extends BaseActivity {
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        camera.activityResultProvider(requestCode, resultCode, data);
+
+        if (requestCode == TransporteActivity.REQUEST_ASSINATURA && data != null) {
+
+            Intent myIntent = getIntent();
+            this.imgAssinatura.setImageBitmap((Bitmap) myIntent.getExtras().get("imgAssinatura"));
+
+        } else {
+            camera.activityResultProvider(requestCode, resultCode, data);
+        }
     }
 
     private void inicializarComponentes() {
@@ -65,13 +74,20 @@ public class TransporteActivity extends BaseActivity {
             }
         });
 
+        this.btnAssinatura.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                recuperarFotoAssinatura();
+            }
+        });
+
         this.camera = new CameraImageConcerns();
     }
 
     private void recuperarTransporteUsuario() {
         try {
             // Recuperar parametros enviados pela view anterior
-            Intent myIntent = getIntent(); // gets the previously created intent
+            Intent myIntent = getIntent();
             this.setIdUsuario(myIntent.getExtras().get("idUsuario").toString());
 
             List<TransporteEntity> transportes = (List<TransporteEntity>) JsonData.lerJson(TransporteEntity.TABLE_NAME);
@@ -94,6 +110,15 @@ public class TransporteActivity extends BaseActivity {
 
     private void recuperarFotoCanhoto() {
         camera.abrirCamera(this);
+    }
+
+    private void recuperarFotoAssinatura() {
+        try {
+            Intent inkIntentView = new Intent(this, InkActivity.class);
+            startActivityForResult(inkIntentView,REQUEST_ASSINATURA);
+        } catch (Exception e) {
+            System.out.print(e.getMessage());
+        }
     }
 
     public String getIdUsuario() {

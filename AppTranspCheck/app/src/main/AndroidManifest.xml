@@ -23,6 +23,7 @@
             </intent-filter>
         </activity>
         <activity android:name=".Presentation.TransporteActivity"></activity>
+        <activity android:name=".Presentation.InkActivity"></activity>
 
         <provider
             android:name="android.support.v4.content.FileProvider"
