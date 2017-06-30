@@ -2,7 +2,7 @@ package br.com.idbservice.apptranspcheck.Infrastructure.Data;
 
 import java.util.List;
 
-import br.com.idbservice.apptranspcheck.Entities.TransporteEntity;
+import br.com.idbservice.apptranspcheck.Domain.Entities.TransporteEntity;
 
 public class TransporteData {
 

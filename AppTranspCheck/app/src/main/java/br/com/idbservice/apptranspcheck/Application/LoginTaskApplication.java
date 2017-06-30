@@ -6,7 +6,7 @@ import android.os.AsyncTask;
 import java.util.List;
 import java.util.UUID;
 
-import br.com.idbservice.apptranspcheck.Entities.UsuarioEntity;
+import br.com.idbservice.apptranspcheck.Domain.Entities.UsuarioEntity;
 import br.com.idbservice.apptranspcheck.Infrastructure.Data.JsonData;
 import br.com.idbservice.apptranspcheck.Presentation.LoginActivity;
 import br.com.idbservice.apptranspcheck.Presentation.TransporteActivity;

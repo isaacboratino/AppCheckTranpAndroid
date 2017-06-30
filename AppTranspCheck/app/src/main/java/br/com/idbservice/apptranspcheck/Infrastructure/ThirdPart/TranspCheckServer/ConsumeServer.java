@@ -1,4 +1,4 @@
-package br.com.idbservice.apptranspcheck.Session;
+package br.com.idbservice.apptranspcheck.Infrastructure.ThirdPart.TranspCheckServer;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
@@ -10,7 +10,7 @@ import org.apache.http.impl.client.DefaultHttpClient;
 
 import br.com.idbservice.apptranspcheck.Infrastructure.Data.JsonData;
 
-public class BaseSession {
+public class ConsumeServer {
 
     public static HttpResponse sendJson(String url, Object dataJson) throws Exception
     {

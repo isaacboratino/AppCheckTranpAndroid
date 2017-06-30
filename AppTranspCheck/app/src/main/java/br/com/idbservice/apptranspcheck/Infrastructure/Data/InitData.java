@@ -3,7 +3,7 @@ package br.com.idbservice.apptranspcheck.Infrastructure.Data;
 import java.util.ArrayList;
 import java.util.List;
 
-import br.com.idbservice.apptranspcheck.Entities.*;
+import br.com.idbservice.apptranspcheck.Domain.Entities.*;
 
 public class InitData {
 

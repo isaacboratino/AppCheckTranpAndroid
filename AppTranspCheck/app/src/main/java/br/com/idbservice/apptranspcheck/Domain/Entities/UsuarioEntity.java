@@ -1,6 +1,4 @@
-package br.com.idbservice.apptranspcheck.Entities;
-
-import org.w3c.dom.Text;
+package br.com.idbservice.apptranspcheck.Domain.Entities;
 
 import java.util.UUID;
 

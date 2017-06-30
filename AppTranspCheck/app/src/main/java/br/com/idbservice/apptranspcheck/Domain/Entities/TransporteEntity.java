@@ -1,4 +1,4 @@
-package br.com.idbservice.apptranspcheck.Entities;
+package br.com.idbservice.apptranspcheck.Domain.Entities;
 
 import java.util.UUID;
 

@@ -13,7 +13,7 @@ import android.widget.TextView;
 
 import java.io.File;
 
-import br.com.idbservice.apptranspcheck.Entities.TransporteEntity;
+import br.com.idbservice.apptranspcheck.Domain.Entities.TransporteEntity;
 import br.com.idbservice.apptranspcheck.Infrastructure.CrossCutting.FileConcerns;
 import br.com.idbservice.apptranspcheck.Infrastructure.Data.TransporteData;
 import br.com.idbservice.apptranspcheck.R;
