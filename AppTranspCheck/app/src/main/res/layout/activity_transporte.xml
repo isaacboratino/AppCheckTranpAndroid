@@ -58,7 +58,7 @@
                             android:text="@string/label_origem" />
 
                         <TextView
-                            android:id="@+id/textOrigem"
+                            android:id="@+id/origemTextView"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
                             android:textSize="@dimen/text_size_button"
@@ -88,7 +88,7 @@
                              />
 
                         <TextView
-                            android:id="@+id/textDestino"
+                            android:id="@+id/destinoTextView"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
                             android:textSize="@dimen/text_size_button"
@@ -110,7 +110,7 @@
                         android:orientation="vertical">
 
                         <ImageView
-                            android:id="@+id/imgCanhoto"
+                            android:id="@+id/canhotoImageView"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
                             android:padding="@dimen/activity_horizontal_margin"
@@ -118,7 +118,7 @@
                             android:visibility="gone" />
 
                         <Button
-                            android:id="@+id/btnCanhoto"
+                            android:id="@+id/canhotoButton"
                             style="?android:textAppearanceSmall"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
@@ -148,7 +148,7 @@
                         android:orientation="vertical">
 
                         <ImageView
-                            android:id="@+id/imgAssinatura"
+                            android:id="@+id/assinaturaImageView"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:padding="@dimen/activity_horizontal_margin"
@@ -158,7 +158,7 @@
                             android:adjustViewBounds="true"/>
 
                         <Button
-                            android:id="@+id/btnAssinatura"
+                            android:id="@+id/assinaturaButton"
                             style="?android:textAppearanceSmall"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
@@ -176,7 +176,7 @@
                 </android.support.v7.widget.CardView>
 
                 <Button
-                    android:id="@+id/btnEnviar"
+                    android:id="@+id/enviarButton"
                     style="?android:textAppearanceSmall"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"

@@ -1,13 +1,13 @@
 package br.com.idbservice.apptranspcheck.Presentation;
 
-import android.Manifest;
+
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
+import android.app.ProgressDialog;
+import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.os.Environment;
 import android.support.v4.app.ActivityCompat;
-import android.support.v7.app.AppCompatActivity;
 
 import android.os.AsyncTask;
 
@@ -24,9 +24,11 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
-import br.com.idbservice.apptranspcheck.Application.LoginTaskApplication;
+import br.com.idbservice.apptranspcheck.Application.IPostTaskListener;
+import br.com.idbservice.apptranspcheck.Domain.Entities.UsuarioEntity;
 import br.com.idbservice.apptranspcheck.Infrastructure.CrossCutting.ValidationConcerns;
 import br.com.idbservice.apptranspcheck.Infrastructure.Data.InitData;
+import br.com.idbservice.apptranspcheck.Infrastructure.ThirdPart.TranspCheckServer.ConsumeServer;
 import br.com.idbservice.apptranspcheck.R;
 
 import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
@@ -34,7 +36,6 @@ import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
 
 public class LoginActivity extends BaseActivity  {
 
-    private AsyncTask<Void, Void, Boolean> userLoginTask = null;
     private AutoCompleteTextView textUsuarioView;
     private EditText textSenhaView;
     private View loginProgress;
@@ -49,7 +50,7 @@ public class LoginActivity extends BaseActivity  {
         super.exibirLogo();
 
         // Carga inicial caso nao exista
-        InitData.cargaInicial();
+        //InitData.cargaInicial();
 
         this.inicializarComponentes();
     }
@@ -57,12 +58,16 @@ public class LoginActivity extends BaseActivity  {
     private void inicializarComponentes() {
         textUsuarioView = (AutoCompleteTextView) findViewById(R.id.textUsuario);
 
-        setTextSenhaView((EditText) findViewById(R.id.textSenha));
-        getTextSenhaView().setOnEditorActionListener(new TextView.OnEditorActionListener() {
+        this.textSenhaView = (EditText) findViewById(R.id.textSenha);
+        this.textSenhaView.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView textView, int id, KeyEvent keyEvent) {
                 if (id == R.id.login || id == EditorInfo.IME_NULL) {
-                    logarUsuario();
+                    try {
+                        logarUsuario();
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
                     return true;
                 }
                 return false;
@@ -73,31 +78,33 @@ public class LoginActivity extends BaseActivity  {
         btnEntrar.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
-                logarUsuario();
+                try {
+                    logarUsuario();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             }
         });
 
         loginScroll = findViewById(R.id.loginScroll);
         loginProgress = findViewById(R.id.loginProgress);
+
+        super.inicializar();
     }
 
-    private void logarUsuario() {
-        if (getUserLoginTask() != null) {
-            return;
-        }
-
+    private void logarUsuario() throws Exception {
         textUsuarioView.setError(null);
-        getTextSenhaView().setError(null);
+        this.textSenhaView.setError(null);
 
         String usuario = textUsuarioView.getText().toString();
-        String senha = getTextSenhaView().getText().toString();
+        String senha = this.textSenhaView.getText().toString();
 
         boolean cancel = false;
         View focusView = null;
 
         if (!TextUtils.isEmpty(senha) && !ValidationConcerns.isPasswordValid(senha)) {
-            getTextSenhaView().setError(getString(R.string.error_invalid_password));
-            focusView = getTextSenhaView();
+            this.textSenhaView.setError(getString(R.string.error_invalid_password));
+            focusView = this.textSenhaView;
             cancel = true;
         }
 
@@ -109,39 +116,42 @@ public class LoginActivity extends BaseActivity  {
 
         if (cancel) {
             focusView.requestFocus();
+
         } else {
-            showProgress(true);
-            setUserLoginTask(new LoginTaskApplication(usuario, senha, this).loginAsync());
-            getUserLoginTask().execute((Void) null);
-        }
-    }
 
-    @TargetApi(Build.VERSION_CODES.HONEYCOMB_MR2)
-    public void showProgress(final boolean show) {
+            toggleDialogWait(true);
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB_MR2) {
-            int shortAnimTime = getResources().getInteger(android.R.integer.config_shortAnimTime);
+            IPostTaskListener<Object> postTaskListener = new IPostTaskListener<Object>() {
 
-            /*loginScroll.setVisibility(show ? View.GONE : View.VISIBLE);
-            loginScroll.animate().setDuration(shortAnimTime).alpha(
-                    show ? 0 : 1).setListener(new AnimatorListenerAdapter() {
                 @Override
-                public void onAnimationEnd(Animator animation) {
-                    loginScroll.setVisibility(show ? View.GONE : View.VISIBLE);
-                }
-            });*/
+                public void onPostTask(Object object) {
 
-            loginProgress.setVisibility(show ? View.VISIBLE : View.GONE);
-            loginProgress.animate().setDuration(shortAnimTime).alpha(
-                    show ? 1 : 0).setListener(new AnimatorListenerAdapter() {
-                @Override
-                public void onAnimationEnd(Animator animation) {
-                    loginProgress.setVisibility(show ? View.VISIBLE : View.GONE);
+                    // se for uma exception
+                    if (object.getClass().getCanonicalName().indexOf("Exception") > -1) {
+                        tratarException((Exception) object);
+                        toggleDialogWait(false);
+
+                    } else {
+                        UsuarioEntity usuarioRetorno = (UsuarioEntity) object;
+
+                        if (usuarioRetorno != null) {
+                            BaseActivity.ID_USUARIO = usuarioRetorno.getId();
+
+                            toggleDialogWait(false);
+
+                            Intent myIntent = new Intent(getApplicationContext(), TransporteActivity.class);
+                            startActivity(myIntent);
+
+                        } else {
+                            textSenhaView.setError(getString(R.string.error_incorrect_password));
+                            textSenhaView.requestFocus();
+                        }
+                    }
                 }
-            });
-        } else {
-            loginProgress.setVisibility(show ? View.VISIBLE : View.GONE);
-            //loginScroll.setVisibility(show ? View.GONE : View.VISIBLE);
+            };
+
+            ConsumeServer.sendJson(getString(R.string.url_auth),
+                    new UsuarioEntity(usuario, senha), UsuarioEntity.class, "POST", postTaskListener);
         }
     }
 
@@ -173,19 +183,4 @@ public class LoginActivity extends BaseActivity  {
         }
     }
 
-    public AsyncTask<Void, Void, Boolean> getUserLoginTask() {
-        return userLoginTask;
-    }
-
-    public void setUserLoginTask(AsyncTask<Void, Void, Boolean> userLoginTask) {
-        this.userLoginTask = userLoginTask;
-    }
-
-    public EditText getTextSenhaView() {
-        return textSenhaView;
-    }
-
-    public void setTextSenhaView(EditText textSenhaView) {
-        this.textSenhaView = textSenhaView;
-    }
 }

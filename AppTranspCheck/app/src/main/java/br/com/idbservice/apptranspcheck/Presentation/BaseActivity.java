@@ -1,15 +1,30 @@
 package br.com.idbservice.apptranspcheck.Presentation;
 
+import android.app.ProgressDialog;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.pm.PackageManager;
 import android.os.Build;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
+import android.view.View;
 import android.widget.Toast;
+
+import java.util.UUID;
 
 import br.com.idbservice.apptranspcheck.R;
 
 import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
 
 public class BaseActivity extends AppCompatActivity {
+
+    public static UUID ID_USUARIO;
+    private ProgressDialog progress;
+
+    public void inicializar() {
+        progress = new ProgressDialog(this);
+    }
 
     protected void exibirLogo() {
         getSupportActionBar().setDisplayShowHomeEnabled(true);
@@ -38,7 +53,34 @@ public class BaseActivity extends AppCompatActivity {
         return false;
     }
 
-    protected void tratarException(Exception e) {
-        Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show();
+    public void toggleDialogWait(Boolean show) {
+        progress.setMessage("Aguarde ");
+        progress.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+        progress.setIndeterminate(true);
+
+        if (show)
+            progress.show();
+        else
+            progress.cancel();
+    }
+
+    public void showAlert(Context cotext, String title, String message) {
+        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(cotext);
+        alertDialogBuilder.setTitle(title);
+        alertDialogBuilder.setMessage(message);
+        alertDialogBuilder.setNegativeButton("Ok",new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        });
+
+        AlertDialog alertDialog = alertDialogBuilder.create();
+        alertDialog.show();
+    }
+
+    public void tratarException(Exception e) {
+        Toast.makeText(this, e.getMessage(), Toast.LENGTH_LONG).show();
+        Log.e(e.getClass().getName(), e.getMessage(), e);
     }
 }

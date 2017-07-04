@@ -21,7 +21,7 @@ public class UsuarioEntity {
     }
 
     public UsuarioEntity(UUID id, String usuario, String senha) {
-        this.setId(UUID.randomUUID());
+        this.setId(id);
         this.setUsuario(usuario);
         this.setSenha(senha);
     }

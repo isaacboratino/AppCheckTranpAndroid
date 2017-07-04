@@ -1,6 +1,7 @@
 package br.com.idbservices.transpcheckserver.Application;
 
 import java.io.IOException;
+import java.util.UUID;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -11,14 +12,12 @@ public class UsuarioApplication {
 	
 	public UsuarioEntity validarUsuario(HttpServletRequest request) throws Exception {
 		
-		Object json = JsonConcerns.requestJsonToObject(request.getInputStream(), UsuarioEntity.class);
+		UsuarioEntity usuarioValidacao = (UsuarioEntity) JsonConcerns.requestJsonToObject(request.getInputStream(), UsuarioEntity.class);		
 		
-		return (UsuarioEntity) json;
-		
-		/*if (usuario.equals("usuario1") && senha.equals("senha1"))
-			return new UsuarioEntity(usuario,senha);
+		if (usuarioValidacao.getUsuario().equals("usuario1") && usuarioValidacao.getSenha().equals("senha1"))
+			return new UsuarioEntity(UUID.fromString("65a221bf-b67d-44eb-8a38-ca0e63d3fbd4"), 
+					usuarioValidacao.getUsuario(), usuarioValidacao.getSenha());
 		else 
-			return null;*/
+			return null;
 	}
-
 }

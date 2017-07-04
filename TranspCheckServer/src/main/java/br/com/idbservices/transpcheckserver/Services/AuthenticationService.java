@@ -23,7 +23,6 @@ import br.com.idbservices.transpcheckserver.Infrastructure.CrossCutting.JsonConc
 
 @WebServlet("/auth")
 public class AuthenticationService extends HttpServlet {
-	private static final long serialVersionUID = 1L;
        
     public AuthenticationService() {
         super();
@@ -49,17 +48,6 @@ public class AuthenticationService extends HttpServlet {
 			else
 				response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);					
 			
-		} catch (JsonGenerationException e) {
-			response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-			JsonConcerns.writeJsonInResponseFromObject(response, e);
-			
-		} catch (JsonMappingException e) {
-			response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-			JsonConcerns.writeJsonInResponseFromObject(response, e);
-			
-		} catch (IOException e) {
-			response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-			JsonConcerns.writeJsonInResponseFromObject(response, e);
 		} catch (Exception e) {
 			response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
 			JsonConcerns.writeJsonInResponseFromObject(response, e);

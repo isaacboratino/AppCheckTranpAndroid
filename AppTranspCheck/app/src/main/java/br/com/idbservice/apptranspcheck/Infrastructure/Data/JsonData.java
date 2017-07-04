@@ -4,11 +4,33 @@ import com.fasterxml.jackson.core.JsonGenerationException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+
 import br.com.idbservice.apptranspcheck.Infrastructure.CrossCutting.FileConcerns;
 
 public class JsonData {
 
     public static final ObjectMapper mapper = new ObjectMapper();
+
+    public static Object inputStreamJsonToEntity(InputStream requestBody, Class<?> classe) throws IOException {
+
+        BufferedReader bufferReader = new BufferedReader(new InputStreamReader(requestBody));
+
+        String json = "";
+
+        if(bufferReader != null){
+            json = bufferReader.readLine();
+        }
+
+        ObjectMapper mapper = new ObjectMapper();
+
+        Object object = mapper.readValue(json, classe);
+
+        return object;
+    }
 
     public static Object lerJson(String arquivoJson) throws Exception {
 
@@ -33,30 +55,6 @@ public class JsonData {
         try {
 
             mapper.writeValue(FileConcerns.criarArquivo(arquivoJson), dados);
-
-        } catch (JsonGenerationException e) {
-            e.printStackTrace();
-        } catch (JsonMappingException e) {
-            e.printStackTrace();
-        }
-    }
-
-    public static void atualizarJson(Object dados, String arquivoJson) throws Exception {
-
-        ObjectMapper mapper = new ObjectMapper();
-
-        try {
-
-            // Convert object to JSON string and save into a file directly
-            mapper.writeValue(FileConcerns.criarArquivo(arquivoJson), dados);
-
-            // Convert object to JSON string
-            String jsonInString = mapper.writeValueAsString(dados);
-            System.out.println(jsonInString);
-
-            // Convert object to JSON string and pretty print
-            jsonInString = mapper.writerWithDefaultPrettyPrinter().writeValueAsString(dados);
-            System.out.println(jsonInString);
 
         } catch (JsonGenerationException e) {
             e.printStackTrace();

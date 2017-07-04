@@ -12,26 +12,22 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.io.File;
+import java.io.IOException;
 
+import br.com.idbservice.apptranspcheck.Application.IPostTaskListener;
 import br.com.idbservice.apptranspcheck.Domain.Entities.TransporteEntity;
 import br.com.idbservice.apptranspcheck.Infrastructure.CrossCutting.FileConcerns;
-import br.com.idbservice.apptranspcheck.Infrastructure.Data.TransporteData;
+import br.com.idbservice.apptranspcheck.Infrastructure.ThirdPart.TranspCheckServer.ConsumeServer;
 import br.com.idbservice.apptranspcheck.R;
 
 public class TransporteActivity extends BaseActivity {
 
-    private String idUsuario;
+    private TextView origemTextView, destinoTextView;
+    private ImageView canhotoImageView, assinaturaImageView;
 
-    private TextView textOrigemView;
-    private TextView textDestinoView;
-    private ImageView imgCanhoto;
-    private ImageView imgAssinatura;
+    private Button canhotoButton, assinaturaButton, enviarButton;
 
-    private Button btnCanhoto;
-    private Button btnAssinatura;
-    private Button btnEnviar;
-
-    private Uri uriImageAssinatura;
+    private Uri canhotoImageUri, canhotoImageTempFile, assinaturaImageUri;
 
     static final int INTENT_REQUEST_CODE_CANHOTO = 1;
     static final int INTENT_REQUEST_CODE_ASSINATURA = 2;
@@ -48,7 +44,6 @@ public class TransporteActivity extends BaseActivity {
         } catch (Exception e) {
             super.tratarException(e);
         }
-
     }
 
     @Override
@@ -56,13 +51,14 @@ public class TransporteActivity extends BaseActivity {
 
         switch (requestCode) {
             case INTENT_REQUEST_CODE_CANHOTO :
-                this.imgCanhoto.setImageURI(this.uriImageAssinatura);
-                this.imgCanhoto.setVisibility(View.VISIBLE);
+                this.canhotoImageView.setImageURI(this.canhotoImageUri);
+                this.canhotoImageView.setVisibility(View.VISIBLE);
                 break;
             case INTENT_REQUEST_CODE_ASSINATURA :
                 if (data != null) {
-                    this.imgAssinatura.setImageURI((Uri)data.getExtras().get("imgAssinatura"));
-                    this.imgAssinatura.setVisibility(View.VISIBLE);
+                    this.assinaturaImageUri = (Uri) data.getExtras().get("imgAssinatura");
+                    this.assinaturaImageView.setImageURI(this.assinaturaImageUri);
+                    this.assinaturaImageView.setVisibility(View.VISIBLE);
                 }
                 break;
         }
@@ -70,17 +66,17 @@ public class TransporteActivity extends BaseActivity {
 
     private void inicializarComponentes() {
 
-        this.textOrigemView = (TextView) findViewById(R.id.textOrigem);
-        this.textDestinoView = (TextView) findViewById(R.id.textDestino);
+        this.origemTextView = (TextView) findViewById(R.id.origemTextView);
+        this.destinoTextView = (TextView) findViewById(R.id.destinoTextView);
 
-        this.imgCanhoto = (ImageView) findViewById(R.id.imgCanhoto);
-        this.imgAssinatura = (ImageView) findViewById(R.id.imgAssinatura);
+        this.canhotoImageView = (ImageView) findViewById(R.id.canhotoImageView);
+        this.assinaturaImageView = (ImageView) findViewById(R.id.assinaturaImageView);
 
-        this.btnCanhoto = (Button) findViewById(R.id.btnCanhoto);
-        this.btnAssinatura = (Button) findViewById(R.id.btnAssinatura);
-        this.btnEnviar = (Button) findViewById(R.id.btnEnviar);
+        this.canhotoButton = (Button) findViewById(R.id.canhotoButton);
+        this.assinaturaButton = (Button) findViewById(R.id.assinaturaButton);
+        this.enviarButton = (Button) findViewById(R.id.enviarButton);
 
-        this.btnCanhoto.setOnClickListener(new View.OnClickListener()  {
+        this.canhotoButton.setOnClickListener(new View.OnClickListener()  {
             @Override
             public void onClick(View view) {
                 try {
@@ -91,7 +87,7 @@ public class TransporteActivity extends BaseActivity {
             }
         });
 
-        this.btnAssinatura.setOnClickListener(new View.OnClickListener() {
+        this.assinaturaButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 try {
@@ -101,20 +97,45 @@ public class TransporteActivity extends BaseActivity {
                 }
             }
         });
+
+        this.enviarButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                try {
+                    enviarArquivos();
+                } catch (Exception e) {
+                    tratarException(e);
+                }
+            }
+        });
+
+        super.inicializar();
     }
 
     private void recuperarTransporteUsuario() throws Exception {
         try {
-            // Recuperar parametros enviados pela view anterior
-            this.idUsuario = getIntent().getExtras().get("idUsuario").toString();
 
-            TransporteEntity transporte = new TransporteData().findStatusByIdUsuario(TransporteEntity.STATUS_ATIVO, idUsuario);
+            /*TransporteEntity transporte = new TransporteData().findStatusByIdUsuario(TransporteEntity.STATUS_ATIVO,
+                    BaseActivity.ID_USUARIO.toString());*/
 
-            if (transporte != null) {
-                this.textOrigemView.setText(transporte.getEnderecoOrigem());
-                this.textDestinoView.setText(transporte.getEnderecoDestino());
-            } else
-                throw new Exception("Não foi encontrado nenhum transporte ativo para esse usuario.");
+            IPostTaskListener<Object> postTaskListener = new IPostTaskListener<Object>() {
+                @Override
+                public void onPostTask(Object result) {
+                    TransporteEntity transporte = (TransporteEntity) result;
+
+                    if (transporte != null) {
+
+                        origemTextView.setText(transporte.getEnderecoOrigem());
+                        destinoTextView.setText(transporte.getEnderecoDestino());
+
+                    } else {
+                        TransporteActivity.super.tratarException(new Exception("Não foi encontrado nenhum transporte ativo para esse usuario."));
+                    }
+                }
+            };
+
+            ConsumeServer.sendJson(getString(R.string.url_transporte)+"?u="+BaseActivity.ID_USUARIO,
+                    null, TransporteEntity.class, "GET", postTaskListener);
 
         } catch (Exception e) {
             throw new Exception("Erro ao tentar recuperar transporte ativo do usuario ", e);
@@ -130,12 +151,12 @@ public class TransporteActivity extends BaseActivity {
         if (photoFile != null) {
 
             try {
+                //String timestamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
 
-                uriImageAssinatura = FileProvider.getUriForFile(getApplicationContext(),
-                        getString(R.string.app_full_package),
-                        photoFile);
+                canhotoImageTempFile = Uri.fromFile(photoFile.getAbsoluteFile());
+                canhotoImageUri = FileProvider.getUriForFile(getApplicationContext(), getString(R.string.app_full_package), photoFile);
 
-                cameraIntentView.putExtra(MediaStore.EXTRA_OUTPUT, uriImageAssinatura);
+                cameraIntentView.putExtra(MediaStore.EXTRA_OUTPUT, canhotoImageUri);
 
                 this.startActivityForResult(cameraIntentView, INTENT_REQUEST_CODE_CANHOTO);
 
@@ -146,20 +167,42 @@ public class TransporteActivity extends BaseActivity {
     }
 
     private File criarImagemTemporaria() throws Exception {
+        return FileConcerns.criarArquivoTemporario(getNomeImageCanhoto(), ".jpg", getExternalFilesDir(Environment.DIRECTORY_PICTURES));
+    }
 
-        String nomeArquivo = "canhoto_" + this.idUsuario + "_";
-
-        return FileConcerns.criarArquivoTemporario(nomeArquivo, ".jpg", getExternalFilesDir(Environment.DIRECTORY_PICTURES));
+    private String getNomeImageCanhoto() {
+        return "canhoto_" + BaseActivity.ID_USUARIO + "_";
     }
 
     private void recuperarFotoAssinatura() throws Exception  {
         try {
             Intent inkIntentView = new Intent(this, InkActivity.class);
-            inkIntentView.putExtra("idUsuario",idUsuario);
             startActivityForResult(inkIntentView, INTENT_REQUEST_CODE_ASSINATURA);
         } catch (Exception e) {
             System.out.print(e.getMessage());
         }
     }
 
+    private void enviarArquivos() throws IOException {
+
+        if (canhotoImageUri == null || canhotoImageTempFile == null) {
+            showAlert(TransporteActivity.this,"Atenção","A foto do canhoto é necessaria");
+        } else if (assinaturaImageUri == null) {
+            showAlert(TransporteActivity.this,"Atenção","A assinatura do canhoto é necessaria");
+        } else {
+            toggleDialogWait(true);
+
+            IPostTaskListener<Object> postTaskListener = new IPostTaskListener<Object>() {
+
+                @Override
+                public void onPostTask(Object object) {
+                    toggleDialogWait(false);
+                    showAlert(TransporteActivity.this,"Sucesso","Imagens enviadas com sucesso");
+                }
+            };
+
+            ConsumeServer.sendMultPartBuilder(getString(R.string.url_transporte)+"?u="+BaseActivity.ID_USUARIO,
+                    new String[]{this.canhotoImageTempFile.getPath(), this.assinaturaImageUri.getEncodedPath()}, postTaskListener);
+        }
+    }
 }

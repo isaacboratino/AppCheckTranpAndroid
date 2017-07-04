@@ -76,9 +76,11 @@ public class InkActivity extends BaseActivity {
 
             try {
 
-                Uri uriImageAssinatura = FileProvider.getUriForFile(getApplicationContext(),
+                /*Uri uriImageAssinatura = FileProvider.getUriForFile(getApplicationContext(),
                         getString(R.string.app_full_package),
-                        imgAssinatura);
+                        imgAssinatura);*/
+
+                Uri uriImageAssinatura = Uri.fromFile(imgAssinatura);
 
                 Intent returnIntent = new Intent();
                 returnIntent.putExtra("imgAssinatura", uriImageAssinatura);
@@ -95,7 +97,7 @@ public class InkActivity extends BaseActivity {
 
     private File criarImagemTemporaria() throws Exception {
 
-        String nomeArquivo = "assinatura_" + getIntent().getExtras().get("idUsuario").toString() + "_";
+        String nomeArquivo = "assinatura_" + BaseActivity.ID_USUARIO.toString() + "_";
 
         return FileConcerns.criarArquivoTemporario(nomeArquivo, ".jpg", getExternalFilesDir(Environment.DIRECTORY_PICTURES));
     }
