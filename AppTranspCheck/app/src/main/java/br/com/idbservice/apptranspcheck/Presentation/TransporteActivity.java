@@ -2,6 +2,7 @@ package br.com.idbservice.apptranspcheck.Presentation;
 
 import android.content.Intent;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
@@ -153,14 +154,21 @@ public class TransporteActivity extends BaseActivity {
             try {
                 //String timestamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
 
-                canhotoImageTempFile = Uri.fromFile(photoFile.getAbsoluteFile());
-                canhotoImageUri = FileProvider.getUriForFile(getApplicationContext(), getString(R.string.app_full_package), photoFile);
+                if (Build.VERSION.SDK_INT >= 23) {
+                    canhotoImageTempFile = Uri.fromFile(photoFile.getAbsoluteFile());
+                    canhotoImageUri = FileProvider.getUriForFile(getApplicationContext(), getString(R.string.app_full_package), photoFile);
+                } else {
+                    canhotoImageTempFile = Uri.fromFile(photoFile.getAbsoluteFile());
+                    canhotoImageUri = canhotoImageTempFile;
+                }
 
                 cameraIntentView.putExtra(MediaStore.EXTRA_OUTPUT, canhotoImageUri);
 
                 this.startActivityForResult(cameraIntentView, INTENT_REQUEST_CODE_CANHOTO);
 
             } catch (Exception e) {
+                canhotoImageTempFile = null;
+                canhotoImageUri = null;
                 throw new Exception(e);
             }
         }
