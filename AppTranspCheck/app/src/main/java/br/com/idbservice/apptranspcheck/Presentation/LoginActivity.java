@@ -56,6 +56,7 @@ public class LoginActivity extends BaseActivity  {
     }
 
     private void inicializarComponentes() {
+
         textUsuarioView = (AutoCompleteTextView) findViewById(R.id.textUsuario);
 
         this.textSenhaView = (EditText) findViewById(R.id.textSenha);
@@ -93,6 +94,7 @@ public class LoginActivity extends BaseActivity  {
     }
 
     private void logarUsuario() throws Exception {
+
         textUsuarioView.setError(null);
         this.textSenhaView.setError(null);
 
@@ -126,18 +128,18 @@ public class LoginActivity extends BaseActivity  {
                 @Override
                 public void onPostTask(Object object) {
 
+                    toggleDialogWait(false);
+
                     // se for uma exception
                     if (object.getClass().getCanonicalName().indexOf("Exception") > -1) {
                         tratarException((Exception) object);
-                        toggleDialogWait(false);
 
                     } else {
+
                         UsuarioEntity usuarioRetorno = (UsuarioEntity) object;
 
                         if (usuarioRetorno != null) {
                             BaseActivity.ID_USUARIO = usuarioRetorno.getId();
-
-                            toggleDialogWait(false);
 
                             Intent myIntent = new Intent(getApplicationContext(), TransporteActivity.class);
                             startActivity(myIntent);

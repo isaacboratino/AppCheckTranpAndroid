@@ -47,7 +47,7 @@ public class BaseActivity extends AppCompatActivity {
                 requestPermissions(new String[]{WRITE_EXTERNAL_STORAGE}, 0);
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            tratarException(e);
         }
 
         return false;

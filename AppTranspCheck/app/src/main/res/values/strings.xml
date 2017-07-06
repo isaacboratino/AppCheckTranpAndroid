@@ -3,7 +3,8 @@
 
     <string name="app_full_package">br.com.idbservice.apptranspcheck</string>
 
-    <string name="app_server">http://192.168.0.1:3000</string>
+    <string name="url_auth">http://192.168.0.3:8080/TranspCheckServer/auth</string>
+    <string name="url_transporte">http://192.168.0.3:8080/TranspCheckServer/transporte</string>
 
     <!-- Strings related to login -->
     <string name="prompt_email">Email</string>
@@ -27,6 +28,13 @@
     <string name="btn_label_assinatura">Assinatura</string>
     <string name="btn_label_enviar">Enviar</string>
 
-    <string name="url_auth">http://192.168.1.37:8080/TranspCheckServer/auth</string>
-    <string name="url_transporte">http://192.168.1.37:8080/TranspCheckServer/transporte</string>
+    <string name="dialog_title_sucesso">Sucesso</string>
+    <string name="dialog_title_atencao">Atenção</string>
+    <string name="msg_required_canhoto">A foto do canhoto é necessaria</string>
+    <string name="msg_required_assinatura">A assinatura do canhoto é necessaria</string>
+    <string name="msg_upload_success">Imagens enviadas com sucesso</string>
+    <string name="msg_upload_unsuccess">Nao foi possivel enviar as imagens</string>
+
+    <!--Exceptions-->
+    <string name="ex_servidor_nao_encontrado">Nao foi possivel conectar ao servidor de dados</string>
 </resources>

@@ -152,6 +152,7 @@ public class TransporteActivity extends BaseActivity {
         if (photoFile != null) {
 
             try {
+
                 //String timestamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
 
                 if (Build.VERSION.SDK_INT >= 21) {
@@ -194,18 +195,39 @@ public class TransporteActivity extends BaseActivity {
     private void enviarArquivos() throws IOException {
 
         if (canhotoImageUri == null || canhotoImageTempFile == null) {
-            showAlert(TransporteActivity.this,"Atenção","A foto do canhoto é necessaria");
+
+            showAlert(TransporteActivity.this, getString(R.string.dialog_title_atencao),
+                    getString(R.string.msg_required_canhoto));
+
         } else if (assinaturaImageUri == null) {
-            showAlert(TransporteActivity.this,"Atenção","A assinatura do canhoto é necessaria");
+
+            showAlert(TransporteActivity.this, getString(R.string.dialog_title_atencao),
+                    getString(R.string.msg_required_assinatura));
+
         } else {
+
             toggleDialogWait(true);
 
             IPostTaskListener<Object> postTaskListener = new IPostTaskListener<Object>() {
 
                 @Override
                 public void onPostTask(Object object) {
+
                     toggleDialogWait(false);
-                    showAlert(TransporteActivity.this,"Sucesso","Imagens enviadas com sucesso");
+
+                    // se for uma exception
+                    if (object.getClass().getCanonicalName().indexOf("Exception") > -1) {
+                        tratarException((Exception) object);
+
+                    } else {
+
+                        if ((Boolean)object)
+                            showAlert(TransporteActivity.this, getString(R.string.dialog_title_sucesso),
+                                    getString(R.string.msg_upload_success));
+                        else
+                            showAlert(TransporteActivity.this, getString(R.string.dialog_title_atencao),
+                                    getString(R.string.msg_upload_unsuccess));
+                    }
                 }
             };
 

@@ -7,6 +7,8 @@ import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
+import java.net.SocketException;
+import java.net.SocketTimeoutException;
 import java.net.URL;
 import java.util.List;
 
@@ -14,6 +16,7 @@ import br.com.idbservice.apptranspcheck.Application.IPostTaskListener;
 import br.com.idbservice.apptranspcheck.Infrastructure.CrossCutting.MultipartConcerns;
 import br.com.idbservice.apptranspcheck.Infrastructure.Data.JsonData;
 import br.com.idbservice.apptranspcheck.Presentation.BaseActivity;
+import br.com.idbservice.apptranspcheck.R;
 
 public class ConsumeServer {
 
@@ -25,7 +28,7 @@ public class ConsumeServer {
             @Override
             protected Object doInBackground(Void... params) {
 
-                Object retorno = false;
+                Object retorno = null;
 
                 try {
 
@@ -71,7 +74,10 @@ public class ConsumeServer {
                             retorno = JsonData.inputStreamJsonToEntity(httpConnection.getInputStream(), classeType);
                             throw new Exception(retorno.toString());
                     }
-
+                } catch (SocketTimeoutException e) {
+                    retorno = new Exception("Nao foi possivel conectar ao servidor de dados", e);
+                } catch (SocketException e) {
+                    retorno = new Exception("Nao foi possivel conectar ao servidor de dados", e);
                 } catch (Exception e) {
                     retorno = e;
                 }
@@ -84,11 +90,9 @@ public class ConsumeServer {
                 super.onPostExecute(result);
 
                 if (result != null && iPostTaskListener != null)
-                    try {
-                        iPostTaskListener.onPostTask(result);
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
+                    iPostTaskListener.onPostTask(result);
+                else
+                    iPostTaskListener.onPostTask(null);
             }
         };
 
@@ -97,12 +101,13 @@ public class ConsumeServer {
 
     public static void sendMultPartBuilder(final String urlParam, final String[] uriFilesParam, final IPostTaskListener<Object> iPostTaskListener) {
 
-        AsyncTask<Void, String, Boolean> task = new AsyncTask<Void, String, Boolean>() {
+        AsyncTask<Void, String, Object> task = new AsyncTask<Void, String, Object>() {
 
             @Override
-            protected Boolean doInBackground(Void... params) {
+            protected Object doInBackground(Void... params) {
 
                 String charset = "UTF-8";
+                Object retorno = false;
 
                 try {
 
@@ -114,114 +119,35 @@ public class ConsumeServer {
                         multipart.addFilePart("fileUpload", new File(uriFilesParam[i].toString()));
                     }
 
-                    List<String> response = multipart.finish();
+                    multipart.finish();
 
-                    System.out.println("SERVER REPLIED:");
-
+                    /*List<String> response = multipart.finish();
                     for (String line : response) {
                         System.out.println(line);
-                    }
+                    }*/
 
-                    return true;
+                    retorno = true;
 
-                } catch (IOException ex) {
-                    System.err.println(ex);
+                } catch (SocketException e) {
+                    retorno = new Exception("Nao foi possivel conectar ao servidor de dados");
+                } catch (IOException e) {
+                    retorno = e;
                 }
 
-                return false;
+                return retorno;
             }
 
             @Override
-            protected void onPostExecute(Boolean result) {
+            protected void onPostExecute(Object result) {
                 super.onPostExecute(result);
 
-                if (result != false && iPostTaskListener != null)
-                    try {
-                        iPostTaskListener.onPostTask(result);
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
+                if (result != null && iPostTaskListener != null)
+                    iPostTaskListener.onPostTask(result);
+                else
+                    iPostTaskListener.onPostTask(false);
             }
         };
 
         task.execute((Void)null);
     }
-        /*
-            @Override
-            protected Boolean doInBackground(Void... params) {
-
-                MultipartEntityBuilder builder = MultipartEntityBuilder.create()
-                        .setMode(HttpMultipartMode.BROWSER_COMPATIBLE)
-                        .addTextBody("idUsuario", BaseActivity.ID_USUARIO.toString())
-                        .addBinaryBody("canhoto", new File(uriFilesParam[0].getPath()), ContentType.MULTIPART_FORM_DATA, null);
-
-
-                for (int i = 0; i < 1; i++) {
-                    FileBody fileBody = new FileBody(new File(uriFilesParam[i].getPath()));
-                    builder.addPart("image" + i, fileBody);
-                }
-
-                try {
-                    HttpPost httpPost = new HttpPost(urlParam);
-                    httpPost.setEntity(builder.build());
-
-                    HttpClient httpclient = new DefaultHttpClient();
-                    ResponseHandler<String> responseHandler = new BasicResponseHandler();
-
-                    String responseBody = httpclient.execute(httpPost, responseHandler);
-
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-                return null;
-            }
-        };
-
-        task.execute((Void)null);
-    }
-
-    public static void sendMultPart(final String urlParam, final Uri[] uriFilesParam) {
-
-        AsyncTask<Void, String, Boolean> task = new AsyncTask<Void, String, Boolean>() {
-
-            @Override
-            protected Boolean doInBackground(Void... params) {
-
-                HttpClient httpclient = new DefaultHttpClient();
-                HttpPost httppost = new HttpPost(urlParam);
-
-                try {
-
-                    MultipartEntity reqEntity = new MultipartEntity();
-
-                    for (int i = 0; i < 1; i++) {
-                        FileBody fileBody = new FileBody(new File(uriFilesParam[i].toString()));
-                        reqEntity.addPart("image" + i, fileBody);
-                    }
-
-                    reqEntity.addPart("idUsuario", new StringBody(BaseActivity.ID_USUARIO.toString()));
-                    httppost.setEntity(reqEntity);
-
-                    System.out.println("Requesting : " + httppost.getRequestLine());
-                    ResponseHandler<String> responseHandler = new BasicResponseHandler();
-
-                    String responseBody = httpclient.execute(httppost, responseHandler);
-
-                    System.out.println("responseBody : " + responseBody);
-
-                } catch (UnsupportedEncodingException e) {
-                    e.printStackTrace();
-                } catch (ClientProtocolException e) {
-                    e.printStackTrace();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                } finally {
-                    httpclient.getConnectionManager().shutdown();
-                }
-                return null;
-            }
-        };
-
-        task.execute((Void) null);
-    }*/
 }
