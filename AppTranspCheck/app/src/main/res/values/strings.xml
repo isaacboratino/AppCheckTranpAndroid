@@ -27,6 +27,6 @@
     <string name="btn_label_assinatura">Assinatura</string>
     <string name="btn_label_enviar">Enviar</string>
 
-    <string name="url_auth">http://192.168.0.2:8080/TranspCheckServer/auth</string>
-    <string name="url_transporte">http://192.168.0.2:8080/TranspCheckServer/transporte</string>
+    <string name="url_auth">http://192.168.1.37:8080/TranspCheckServer/auth</string>
+    <string name="url_transporte">http://192.168.1.37:8080/TranspCheckServer/transporte</string>
 </resources>

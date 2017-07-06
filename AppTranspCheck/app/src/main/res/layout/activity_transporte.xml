@@ -112,10 +112,12 @@
                         <ImageView
                             android:id="@+id/canhotoImageView"
                             android:layout_width="match_parent"
-                            android:layout_height="match_parent"
+                            android:layout_height="wrap_content"
                             android:padding="@dimen/activity_horizontal_margin"
+                            android:cropToPadding="true"
                             android:src="@mipmap/no_image"
-                            android:visibility="gone" />
+                            android:visibility="gone"
+                            android:adjustViewBounds="true"/> />
 
                         <Button
                             android:id="@+id/canhotoButton"

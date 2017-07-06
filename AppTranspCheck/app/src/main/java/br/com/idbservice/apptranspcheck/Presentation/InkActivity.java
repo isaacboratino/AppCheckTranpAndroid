@@ -27,12 +27,19 @@ public class InkActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_ink);
 
-        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+        try {
+            setContentView(R.layout.activity_ink);
 
-        super.exibirLogo();
-        this.inicializarComponentes();
+            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+
+            super.exibirLogo();
+            this.inicializarComponentes();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
     }
 
     private void inicializarComponentes() {

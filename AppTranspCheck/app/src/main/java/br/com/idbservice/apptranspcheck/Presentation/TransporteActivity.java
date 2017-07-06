@@ -154,7 +154,7 @@ public class TransporteActivity extends BaseActivity {
             try {
                 //String timestamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
 
-                if (Build.VERSION.SDK_INT >= 23) {
+                if (Build.VERSION.SDK_INT >= 21) {
                     canhotoImageTempFile = Uri.fromFile(photoFile.getAbsoluteFile());
                     canhotoImageUri = FileProvider.getUriForFile(getApplicationContext(), getString(R.string.app_full_package), photoFile);
                 } else {
