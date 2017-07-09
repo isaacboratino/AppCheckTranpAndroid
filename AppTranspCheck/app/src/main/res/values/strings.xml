@@ -7,8 +7,8 @@
     <string name="url_transporte">http://192.168.0.3:8080/TranspCheckServer/transporte</string>
 
     <!-- Strings related to login -->
-    <string name="prompt_email">Email</string>
-    <string name="prompt_password">Senha (optional)</string>
+    <string name="prompt_email">Usuario</string>
+    <string name="prompt_password">Senha</string>
     <string name="action_sign_in">Entrar</string>
     <string name="action_sign_in_short">Entrar</string>
     <string name="error_invalid_email">Esse usuario e invalido</string>
@@ -34,6 +34,8 @@
     <string name="msg_required_assinatura">A assinatura do canhoto é necessaria</string>
     <string name="msg_upload_success">Imagens enviadas com sucesso</string>
     <string name="msg_upload_unsuccess">Nao foi possivel enviar as imagens</string>
+
+    <string name="msg_login_null">Nao foi encontrado nenhum usuario com essa autenticacao</string>
 
     <!--Exceptions-->
     <string name="ex_servidor_nao_encontrado">Nao foi possivel conectar ao servidor de dados</string>

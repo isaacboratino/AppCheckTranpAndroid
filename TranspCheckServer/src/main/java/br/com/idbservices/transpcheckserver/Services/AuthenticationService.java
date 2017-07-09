@@ -33,7 +33,8 @@ public class AuthenticationService extends HttpServlet {
         
 	}
 
-	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws JsonGenerationException, JsonMappingException, IOException {		
+	protected void doPost(HttpServletRequest request, HttpServletResponse response) 
+			throws JsonGenerationException, JsonMappingException, IOException {		
 		       
 		response.setContentType("application/json");
 		
@@ -44,9 +45,11 @@ public class AuthenticationService extends HttpServlet {
 			if (usuario != null) {
 				response.setStatus(HttpServletResponse.SC_OK);
 				JsonConcerns.writeJsonInResponseFromObject(response, usuario);
+			
+			} else {
+				response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+				JsonConcerns.writeJsonInResponseFromObject(response, null);
 			}
-			else
-				response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);					
 			
 		} catch (Exception e) {
 			response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);

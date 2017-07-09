@@ -104,6 +104,12 @@ public class LoginActivity extends BaseActivity  {
         boolean cancel = false;
         View focusView = null;
 
+        if (TextUtils.isEmpty(senha)) {
+            textSenhaView.setError(getString(R.string.error_field_required));
+            focusView = textSenhaView;
+            cancel = true;
+        }
+
         if (!TextUtils.isEmpty(senha) && !ValidationConcerns.isPasswordValid(senha)) {
             this.textSenhaView.setError(getString(R.string.error_invalid_password));
             focusView = this.textSenhaView;
@@ -130,8 +136,10 @@ public class LoginActivity extends BaseActivity  {
 
                     toggleDialogWait(false);
 
-                    // se for uma exception
-                    if (object.getClass().getCanonicalName().indexOf("Exception") > -1) {
+                    if (object == null) {
+                        tratarException(new Exception(getString(R.string.msg_login_null)));
+
+                    } else if (object.getClass().getCanonicalName().indexOf("Exception") > -1) {
                         tratarException((Exception) object);
 
                     } else {

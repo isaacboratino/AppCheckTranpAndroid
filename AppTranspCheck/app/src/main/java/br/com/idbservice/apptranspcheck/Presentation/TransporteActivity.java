@@ -155,9 +155,14 @@ public class TransporteActivity extends BaseActivity {
 
                 //String timestamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
 
-                if (Build.VERSION.SDK_INT >= 21) {
+                if (Build.VERSION.SDK_INT >= 21 && Build.VERSION.SDK_INT < 25) {
+                    canhotoImageTempFile = Uri.fromFile(photoFile);
+                    canhotoImageUri = FileProvider.getUriForFile(getApplicationContext(), getString(R.string.app_full_package), photoFile);
+
+                } else if (Build.VERSION.SDK_INT >= 25) {
                     canhotoImageTempFile = Uri.fromFile(photoFile.getAbsoluteFile());
                     canhotoImageUri = FileProvider.getUriForFile(getApplicationContext(), getString(R.string.app_full_package), photoFile);
+
                 } else {
                     canhotoImageTempFile = Uri.fromFile(photoFile.getAbsoluteFile());
                     canhotoImageUri = canhotoImageTempFile;
@@ -215,8 +220,12 @@ public class TransporteActivity extends BaseActivity {
 
                     toggleDialogWait(false);
 
-                    // se for uma exception
-                    if (object.getClass().getCanonicalName().indexOf("Exception") > -1) {
+                    if (object == null) {
+
+                        showAlert(TransporteActivity.this, getString(R.string.dialog_title_atencao),
+                                getString(R.string.msg_upload_unsuccess));
+
+                    } else if (object.getClass().getCanonicalName().indexOf("Exception") > -1) {
                         tratarException((Exception) object);
 
                     } else {

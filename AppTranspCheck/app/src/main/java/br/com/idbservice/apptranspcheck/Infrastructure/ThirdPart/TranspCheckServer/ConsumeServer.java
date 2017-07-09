@@ -4,6 +4,7 @@ import android.os.AsyncTask;
 
 import java.io.BufferedOutputStream;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
@@ -71,13 +72,21 @@ public class ConsumeServer {
                             break;
 
                         case HttpURLConnection.HTTP_INTERNAL_ERROR:
+                        case HttpURLConnection.HTTP_UNAUTHORIZED:
+
                             retorno = JsonData.inputStreamJsonToEntity(httpConnection.getInputStream(), classeType);
                             throw new Exception(retorno.toString());
+
                     }
+                } catch (FileNotFoundException e) {
+                    retorno = new Exception("Usuario não encontrado", e);
+
                 } catch (SocketTimeoutException e) {
                     retorno = new Exception("Nao foi possivel conectar ao servidor de dados", e);
+
                 } catch (SocketException e) {
                     retorno = new Exception("Nao foi possivel conectar ao servidor de dados", e);
+
                 } catch (Exception e) {
                     retorno = e;
                 }
