@@ -16,7 +16,8 @@ import java.io.File;
 import java.io.IOException;
 
 import br.com.idbservice.apptranspcheck.Application.IPostTaskListener;
-import br.com.idbservice.apptranspcheck.Domain.Entities.TransporteEntity;
+import br.com.idbservice.apptranspcheck.Domain.Entities.TransporteConsultResultEntity;
+import br.com.idbservice.apptranspcheck.Domain.Entities.TransporteEndEntity;
 import br.com.idbservice.apptranspcheck.Infrastructure.CrossCutting.FileConcerns;
 import br.com.idbservice.apptranspcheck.Infrastructure.ThirdPart.TranspCheckServer.ConsumeServer;
 import br.com.idbservice.apptranspcheck.R;
@@ -116,18 +117,18 @@ public class TransporteActivity extends BaseActivity {
     private void recuperarTransporteUsuario() throws Exception {
         try {
 
-            /*TransporteEntity transporte = new TransporteData().findStatusByIdUsuario(TransporteEntity.STATUS_ATIVO,
+            /*TransporteEndEntity transporte = new TransporteData().findStatusByIdUsuario(TransporteEndEntity.STATUS_ATIVO,
                     BaseActivity.ID_USUARIO.toString());*/
 
             IPostTaskListener<Object> postTaskListener = new IPostTaskListener<Object>() {
                 @Override
                 public void onPostTask(Object result) {
-                    TransporteEntity transporte = (TransporteEntity) result;
+                    TransporteConsultResultEntity transporte = (TransporteConsultResultEntity) result;
 
                     if (transporte != null) {
 
-                        origemTextView.setText(transporte.getEnderecoOrigem());
-                        destinoTextView.setText(transporte.getEnderecoDestino());
+                        origemTextView.setText(transporte.getOrigin());
+                        destinoTextView.setText(transporte.getDest());
 
                     } else {
                         TransporteActivity.super.tratarException(new Exception("Não foi encontrado nenhum transporte ativo para esse usuario."));
@@ -135,8 +136,9 @@ public class TransporteActivity extends BaseActivity {
                 }
             };
 
-            ConsumeServer.sendJson(getString(R.string.url_transporte)+"?u="+BaseActivity.ID_USUARIO,
-                    null, TransporteEntity.class, "GET", postTaskListener);
+            ConsumeServer.consultarTransportes(
+                    getString(R.string.url_transporte)+"?key="+BaseActivity.KEY_USUARIO,
+                    postTaskListener);
 
         } catch (Exception e) {
             throw new Exception("Erro ao tentar recuperar transporte ativo do usuario ", e);
@@ -185,7 +187,7 @@ public class TransporteActivity extends BaseActivity {
     }
 
     private String getNomeImageCanhoto() {
-        return "canhoto_" + BaseActivity.ID_USUARIO + "_";
+        return "canhoto_" + BaseActivity.KEY_USUARIO + "_";
     }
 
     private void recuperarFotoAssinatura() throws Exception  {
@@ -240,8 +242,18 @@ public class TransporteActivity extends BaseActivity {
                 }
             };
 
-            ConsumeServer.sendMultPartBuilder(getString(R.string.url_transporte)+"?u="+BaseActivity.ID_USUARIO,
-                    new String[]{this.canhotoImageTempFile.getPath(), this.assinaturaImageUri.getEncodedPath()}, postTaskListener);
+            try {
+                ConsumeServer.sendImages(
+                        getString(R.string.url_transporte),
+                        new TransporteEndEntity(
+                                BaseActivity.KEY_USUARIO,
+                                this.canhotoImageTempFile.getPath(),
+                                this.assinaturaImageUri.getEncodedPath()),
+                        postTaskListener);
+            } catch (Exception e)
+            {
+                e.printStackTrace();
+            }
         }
     }
 }

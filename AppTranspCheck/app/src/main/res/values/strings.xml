@@ -3,8 +3,8 @@
 
     <string name="app_full_package">br.com.idbservice.apptranspcheck</string>
 
-    <string name="url_auth">http://192.168.0.3:8080/TranspCheckServer/auth</string>
-    <string name="url_transporte">http://192.168.0.3:8080/TranspCheckServer/transporte</string>
+    <string name="url_auth">http://192.168.0.68:8080/BallAppsServer/login</string>
+    <string name="url_transporte">http://192.168.0.68:8080/BallAppsServer/tms/moto</string>
 
     <!-- Strings related to login -->
     <string name="prompt_email">Usuario</string>

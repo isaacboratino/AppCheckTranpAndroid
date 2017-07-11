@@ -2,22 +2,22 @@ package br.com.idbservice.apptranspcheck.Infrastructure.Data;
 
 import java.util.List;
 
-import br.com.idbservice.apptranspcheck.Domain.Entities.TransporteEntity;
+import br.com.idbservice.apptranspcheck.Domain.Entities.TransporteEndEntity;
 
 public class TransporteData {
 
-    public TransporteEntity findStatusByIdUsuario(char status, String idUsuario) throws Exception {
+    public TransporteEndEntity findStatusByIdUsuario(char status, String idUsuario) throws Exception {
 
-        List<TransporteEntity> transportes = (List<TransporteEntity>) JsonData.lerJson(TransporteEntity.TABLE_NAME);
+        List<TransporteEndEntity> transportes = (List<TransporteEndEntity>) JsonData.lerJson(br.com.idbservice.apptranspcheck.Domain.Entities.TransporteEndEntity.TABLE_NAME);
         for (int i = 0; i < transportes.size(); i++) {
 
-            TransporteEntity transporte = JsonData.mapper.convertValue(transportes.get(i), TransporteEntity.class);
+            TransporteEndEntity transporte = JsonData.mapper.convertValue(transportes.get(i), TransporteEndEntity.class);
 
             // Recuperar transporte ativo do usuario
-            if (transporte.getUsuarioEntity().getId().toString().equals(idUsuario) &&
-                    transporte.getStatus() == status) {
-                return transporte;
-            }
+//            if (transporte.getUsuarioEntity().getId().toString().equals(idUsuario) &&
+//                    transporte.getStatus() == status) {
+//                return transporte;
+//            }
         }
         return null;
     }

@@ -19,7 +19,7 @@ import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
 
 public class BaseActivity extends AppCompatActivity {
 
-    public static UUID ID_USUARIO;
+    public static String KEY_USUARIO;
     private ProgressDialog progress;
 
     public void inicializar() {

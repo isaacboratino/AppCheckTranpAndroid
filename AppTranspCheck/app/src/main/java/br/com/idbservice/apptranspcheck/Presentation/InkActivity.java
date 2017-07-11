@@ -104,7 +104,7 @@ public class InkActivity extends BaseActivity {
 
     private File criarImagemTemporaria() throws Exception {
 
-        String nomeArquivo = "assinatura_" + BaseActivity.ID_USUARIO.toString() + "_";
+        String nomeArquivo = "assinatura_" + BaseActivity.KEY_USUARIO.toString() + "_";
 
         return FileConcerns.criarArquivoTemporario(nomeArquivo, ".jpg", getExternalFilesDir(Environment.DIRECTORY_PICTURES));
     }

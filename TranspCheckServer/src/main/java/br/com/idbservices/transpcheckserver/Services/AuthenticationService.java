@@ -1,11 +1,7 @@
 package br.com.idbservices.transpcheckserver.Services;
 
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.util.LinkedList;
-import java.util.List;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -15,7 +11,6 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.fasterxml.jackson.core.JsonGenerationException;
 import com.fasterxml.jackson.databind.JsonMappingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 
 import br.com.idbservices.transpcheckserver.Application.UsuarioApplication;
 import br.com.idbservices.transpcheckserver.Domain.Entities.UsuarioEntity;

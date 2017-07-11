@@ -1,6 +1,5 @@
 package br.com.idbservices.transpcheckserver.Application;
 
-import java.io.IOException;
 import java.util.UUID;
 
 import javax.servlet.http.HttpServletRequest;

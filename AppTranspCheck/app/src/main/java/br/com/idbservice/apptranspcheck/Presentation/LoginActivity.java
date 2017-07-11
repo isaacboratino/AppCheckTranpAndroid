@@ -1,15 +1,9 @@
 package br.com.idbservice.apptranspcheck.Presentation;
 
 
-import android.animation.Animator;
-import android.animation.AnimatorListenerAdapter;
-import android.annotation.TargetApi;
-import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.support.v4.app.ActivityCompat;
-
-import android.os.AsyncTask;
 
 import android.os.Build;
 import android.os.Bundle;
@@ -25,9 +19,9 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import br.com.idbservice.apptranspcheck.Application.IPostTaskListener;
-import br.com.idbservice.apptranspcheck.Domain.Entities.UsuarioEntity;
+import br.com.idbservice.apptranspcheck.Domain.Entities.UsuarioLoginResponseEntity;
+import br.com.idbservice.apptranspcheck.Domain.Entities.UsuarioLoginTryEntity;
 import br.com.idbservice.apptranspcheck.Infrastructure.CrossCutting.ValidationConcerns;
-import br.com.idbservice.apptranspcheck.Infrastructure.Data.InitData;
 import br.com.idbservice.apptranspcheck.Infrastructure.ThirdPart.TranspCheckServer.ConsumeServer;
 import br.com.idbservice.apptranspcheck.R;
 
@@ -144,10 +138,10 @@ public class LoginActivity extends BaseActivity  {
 
                     } else {
 
-                        UsuarioEntity usuarioRetorno = (UsuarioEntity) object;
+                        UsuarioLoginResponseEntity usuarioRetorno = (UsuarioLoginResponseEntity) object;
 
                         if (usuarioRetorno != null) {
-                            BaseActivity.ID_USUARIO = usuarioRetorno.getId();
+                            BaseActivity.KEY_USUARIO = usuarioRetorno.getKey();
 
                             Intent myIntent = new Intent(getApplicationContext(), TransporteActivity.class);
                             startActivity(myIntent);
@@ -160,8 +154,8 @@ public class LoginActivity extends BaseActivity  {
                 }
             };
 
-            ConsumeServer.sendJson(getString(R.string.url_auth),
-                    new UsuarioEntity(usuario, senha), UsuarioEntity.class, "POST", postTaskListener);
+            ConsumeServer.sendLoginJson(getString(R.string.url_auth),
+                    new UsuarioLoginTryEntity(usuario, senha), postTaskListener);
         }
     }
 
